@@ -13,11 +13,18 @@ func NewCreateShortLink(repository port.LinksRepository) *CreateShortLink {
 	return &CreateShortLink{repository}
 }
 
-func (u *CreateShortLink) Call(url string) (model.Link, error) {
+func (u *CreateShortLink) Call(url string, link_config model.LinkConfig) (model.Link, error) {
 	index, err := u.repository.GetNextLinkIndex()
 	if err != nil {
-		// TODO: implove
 		return model.Link{}, err
 	}
-	return model.Link{}, nil
+
+	link := model.NewFromIndex(index, url, link_config)
+
+	err = u.repository.SaveLink(link)
+	if err != nil {
+		return model.Link{}, err
+	}
+
+	return link, nil
 }

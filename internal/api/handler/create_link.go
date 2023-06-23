@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
+	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
 
@@ -15,7 +17,17 @@ func NewCreateLinkHandler(createShortLink *usecase.CreateShortLink) *CreateLinkH
 }
 
 func (h *CreateLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	config := model.LinkConfig{
+		Protocol: "http",
+		Host:     "localhost:8080",
+	}
+	link, err := h.createShortLink.Call("https://www.google.com", config)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(link)
 }
 
 func (h *CreateLinkHandler) Path() string {
