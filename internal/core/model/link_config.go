@@ -1,8 +1,7 @@
 package model
 
 type LinkConfig struct {
-	TtlInSec *int
-	MaxHits  *int
+	TtlInSec *uint
+	MaxHits  *uint
 	Host     string
-	Protocol string
 }

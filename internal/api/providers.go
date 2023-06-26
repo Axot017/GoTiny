@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/go-playground/validator/v10"
 	"go.uber.org/fx"
 
 	"gotiny/internal/api/handler"
@@ -8,6 +9,7 @@ import (
 
 func Providers() []interface{} {
 	return []interface{}{
+		validator.New,
 		fx.Annotate(
 			handler.NewHealthHandler,
 			fx.ResultTags(`group:"routes"`),

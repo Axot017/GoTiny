@@ -9,6 +9,15 @@ import (
 	"gotiny/internal/core/model"
 )
 
+type mockCoreConfig struct {
+	mock.Mock
+}
+
+func (m *mockCoreConfig) BaseUrl() string {
+	args := m.Called()
+	return args.String(0)
+}
+
 type mockLinksRepository struct {
 	mock.Mock
 }
@@ -28,11 +37,13 @@ func TestCreateShortLink(t *testing.T) {
 	repo.On("GetNextLinkIndex").Return(uint(1), nil).Once()
 	repo.On("SaveLink").Return(nil).Once()
 
-	usecase := NewCreateShortLink(repo)
+	core_config := new(mockCoreConfig)
+	core_config.On("BaseUrl").Return("http://localhost:8080").Once()
+
+	usecase := NewCreateShortLink(repo, core_config)
 
 	config := model.LinkConfig{
-		Host:     "localhost:8080",
-		Protocol: "http",
+		Host: "localhost:8080",
 	}
 	link, err := usecase.Call("https://www.google.com", config)
 
@@ -41,4 +52,5 @@ func TestCreateShortLink(t *testing.T) {
 	assert.Equal(t, "http://localhost:8080/1", link.ShortLink)
 	assert.Equal(t, "1", link.Id)
 	repo.AssertExpectations(t)
+	core_config.AssertExpectations(t)
 }

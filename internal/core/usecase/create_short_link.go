@@ -7,10 +7,11 @@ import (
 
 type CreateShortLink struct {
 	repository port.LinksRepository
+	config     port.CoreConfig
 }
 
-func NewCreateShortLink(repository port.LinksRepository) *CreateShortLink {
-	return &CreateShortLink{repository}
+func NewCreateShortLink(repository port.LinksRepository, config port.CoreConfig) *CreateShortLink {
+	return &CreateShortLink{repository, config}
 }
 
 func (u *CreateShortLink) Call(url string, link_config model.LinkConfig) (model.Link, error) {
@@ -19,7 +20,7 @@ func (u *CreateShortLink) Call(url string, link_config model.LinkConfig) (model.
 		return model.Link{}, err
 	}
 
-	link := model.NewFromIndex(index, url, link_config)
+	link := model.NewFromIndex(index, url, link_config, u.config.BaseUrl())
 
 	err = u.repository.SaveLink(link)
 	if err != nil {

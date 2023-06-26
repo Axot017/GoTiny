@@ -13,6 +13,7 @@ import (
 	"gotiny/internal/api"
 	"gotiny/internal/api/handler"
 	"gotiny/internal/core"
+	"gotiny/internal/core/port"
 	"gotiny/internal/data"
 )
 
@@ -20,6 +21,7 @@ func StartServer() {
 	fx.New(
 		fx.Provide(
 			newServer,
+			fx.Annotate(NewConfig, fx.As(new(port.CoreConfig))),
 			fx.Annotate(newMux, fx.ParamTags(`group:"routes"`)),
 			fx.Annotate(
 				handler.NewHealthHandler,

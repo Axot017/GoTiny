@@ -10,15 +10,15 @@ type Link struct {
 	Id           string
 	ShortLink    string
 	OriginalLink string
-	Hits         int
-	MaxHits      *int
+	Hits         uint
+	MaxHits      *uint
 	ValidUntil   *time.Time
 	CreatedAt    time.Time
 }
 
-func NewFromIndex(index uint, url string, config LinkConfig) Link {
+func NewFromIndex(index uint, url string, config LinkConfig, baseUrl string) Link {
 	id := util.EncodeBase62(index)
-	shortLink := config.Protocol + "://" + config.Host + "/" + id
+	shortLink := baseUrl + "/" + id
 	now := time.Now()
 
 	var validUntil *time.Time
