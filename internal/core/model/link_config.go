@@ -1,7 +1,9 @@
 package model
 
+import "time"
+
 type LinkConfig struct {
-	TtlInSec *uint
-	MaxHits  *uint
-	Host     string
+	ValidUntil *time.Time
+	MaxHits    *uint
+	Host       string
 }

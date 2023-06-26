@@ -13,7 +13,7 @@ import (
 	"gotiny/internal/api"
 	"gotiny/internal/api/handler"
 	"gotiny/internal/core"
-	"gotiny/internal/core/port"
+	"gotiny/internal/core/usecase"
 	"gotiny/internal/data"
 )
 
@@ -21,12 +21,10 @@ func StartServer() {
 	fx.New(
 		fx.Provide(
 			newServer,
-			fx.Annotate(NewConfig, fx.As(new(port.CoreConfig))),
-			fx.Annotate(newMux, fx.ParamTags(`group:"routes"`)),
+			fx.Annotate(NewConfig, fx.As(new(usecase.CreateShortLinkConfig))),
 			fx.Annotate(
-				handler.NewHealthHandler,
-				fx.ResultTags(`group:"routes"`),
-				fx.As(new(api.RouteHandler)),
+				newMux,
+				fx.ParamTags(`group:"routes"`),
 			),
 		),
 		fx.Provide(api.Providers()...),
@@ -53,7 +51,7 @@ func startServer(lc fx.Lifecycle, server *http.Server) {
 	})
 }
 
-func newMux(handlers []api.RouteHandler) *chi.Mux {
+func newMux(handlers []api.RouteHandler, redirect_hander *handler.RedirectHandler) *chi.Mux {
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.RequestID)
@@ -61,9 +59,14 @@ func newMux(handlers []api.RouteHandler) *chi.Mux {
 	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
 
-	for _, h := range handlers {
-		mux.Method(h.Method(), h.Path(), h)
-	}
+	mux.Route("/api", func(r chi.Router) {
+		for _, h := range handlers {
+			r.Method(h.Method(), h.Path(), h)
+		}
+	})
+
+	mux.Method(redirect_hander.Method(), redirect_hander.Path(), redirect_hander)
+
 	return mux
 }
 

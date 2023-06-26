@@ -28,3 +28,25 @@ func (r *LocalLinksRepository) SaveLink(link model.Link) error {
 
 	return nil
 }
+
+func (r *LocalLinksRepository) GetLinkById(id string) (*model.Link, error) {
+	link, ok := r.links[id]
+	if ok {
+		return &link, nil
+	}
+	return nil, nil
+}
+
+func (r *LocalLinksRepository) DeleteLinkById(id string) error {
+	delete(r.links, id)
+	return nil
+}
+
+func (r *LocalLinksRepository) IncrementHitCount(id string) error {
+	link, ok := r.links[id]
+	if ok {
+		link.Hits++
+		r.links[id] = link
+	}
+	return nil
+}

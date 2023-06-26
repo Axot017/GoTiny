@@ -21,18 +21,24 @@ func NewFromIndex(index uint, url string, config LinkConfig, baseUrl string) Lin
 	shortLink := baseUrl + "/" + id
 	now := time.Now()
 
-	var validUntil *time.Time
-	if config.TtlInSec != nil {
-		time := now.Add(time.Duration(*config.TtlInSec) * time.Second)
-		validUntil = &time
-	}
-
 	return Link{
 		Id:           id,
 		ShortLink:    shortLink,
 		OriginalLink: url,
 		CreatedAt:    now,
 		MaxHits:      config.MaxHits,
-		ValidUntil:   validUntil,
+		ValidUntil:   config.ValidUntil,
 	}
+}
+
+func (l Link) Valid() bool {
+	return !l.MaxHitsExceeded() && l.ValidNow()
+}
+
+func (l Link) MaxHitsExceeded() bool {
+	return l.MaxHits != nil && l.Hits >= *l.MaxHits
+}
+
+func (l Link) ValidNow() bool {
+	return l.ValidUntil != nil && l.ValidUntil.After(time.Now())
 }

@@ -24,25 +24,25 @@ func NewCreateLinkHandler(
 	return &CreateLinkHandler{createShortLink, validate}
 }
 
-func (h *CreateLinkHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	dto, err := util.DeserializeAndValidateBody[dto.CreateLinkDto](r, h.validate)
+func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	dto, err := util.DeserializeAndValidateBody[dto.CreateLinkDto](request, h.validate)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	config := model.LinkConfig{
-		MaxHits:  dto.MaxHits,
-		TtlInSec: dto.TtlInSec,
-		Host:     r.Host,
+		MaxHits:    dto.MaxHits,
+		ValidUntil: dto.ValidUntil,
+		Host:       request.Host,
 	}
 	link, err := h.createShortLink.Call(dto.Link, config)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		writer.WriteHeader(http.StatusInternalServerError)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(link)
+	writer.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(writer).Encode(link)
 }
 
 func (h *CreateLinkHandler) Path() string {

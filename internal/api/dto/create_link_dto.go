@@ -1,7 +1,9 @@
 package dto
 
+import "time"
+
 type CreateLinkDto struct {
-	Link     string `json:"link"       validate:"required,http_url"`
-	TtlInSec *uint  `json:"ttl_in_sec" validate:"omitempty,gte=0"`
-	MaxHits  *uint  `json:"max_hits"   validate:"omitempty,gte=0"`
+	Link       string     `json:"link"        validate:"required,http_url"`
+	ValidUntil *time.Time `json:"valid_until" validate:"omitempty"`
+	MaxHits    *uint      `json:"max_hits"    validate:"omitempty,gt=0"`
 }

@@ -2,15 +2,27 @@ package usecase
 
 import (
 	"gotiny/internal/core/model"
-	"gotiny/internal/core/port"
 )
 
-type CreateShortLink struct {
-	repository port.LinksRepository
-	config     port.CoreConfig
+type CreateShortLinkConfig interface {
+	BaseUrl() string
 }
 
-func NewCreateShortLink(repository port.LinksRepository, config port.CoreConfig) *CreateShortLink {
+type CreateShortLinkRepository interface {
+	GetNextLinkIndex() (uint, error)
+
+	SaveLink(link model.Link) error
+}
+
+type CreateShortLink struct {
+	repository CreateShortLinkRepository
+	config     CreateShortLinkConfig
+}
+
+func NewCreateShortLink(
+	repository CreateShortLinkRepository,
+	config CreateShortLinkConfig,
+) *CreateShortLink {
 	return &CreateShortLink{repository, config}
 }
 

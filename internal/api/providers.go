@@ -20,5 +20,6 @@ func Providers() []interface{} {
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
+		handler.NewRedirectHandler,
 	}
 }
