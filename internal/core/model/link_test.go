@@ -28,6 +28,7 @@ func TestNewFromIndex(t *testing.T) {
 	assert.Equal(t, uint(0), link.Hits)
 	assert.NotNil(t, link.ValidUntil)
 	assert.Equal(t, validUntil, *link.ValidUntil)
+	assert.NotEmpty(t, link.Token)
 }
 
 func TestLinkValidNow(t *testing.T) {

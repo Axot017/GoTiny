@@ -25,18 +25,18 @@ func NewCreateLinkHandler(
 }
 
 func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	dto, err := util.DeserializeAndValidateBody[dto.CreateLinkDto](request, h.validate)
+	create_link_dto, err := util.DeserializeAndValidateBody[dto.CreateLinkDto](request, h.validate)
 	if err != nil {
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	config := model.LinkConfig{
-		MaxHits:    dto.MaxHits,
-		ValidUntil: dto.ValidUntil,
+		MaxHits:    create_link_dto.MaxHits,
+		ValidUntil: create_link_dto.ValidUntil,
 		Host:       request.Host,
 	}
-	link, err := h.createShortLink.Call(dto.Link, config)
+	link, err := h.createShortLink.Call(create_link_dto.Link, config)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 	}
@@ -46,7 +46,7 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 }
 
 func (h *CreateLinkHandler) Path() string {
-	return "/link"
+	return "/v1/link"
 }
 
 func (h *CreateLinkHandler) Method() string {

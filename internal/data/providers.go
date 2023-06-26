@@ -13,6 +13,7 @@ func Providers() []interface{} {
 			adapter.NewLocalLinksRepository,
 			fx.As(new(usecase.CreateShortLinkRepository)),
 			fx.As(new(usecase.HitLinkRepository)),
+			fx.As(new(usecase.GetLinkDetailsRepository)),
 		),
 	}
 }

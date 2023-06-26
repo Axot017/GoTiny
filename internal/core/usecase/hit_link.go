@@ -30,7 +30,7 @@ func (u *HitLink) Call(id string) (*string, error) {
 		return nil, nil
 	}
 
-	if link.Valid() {
+	if !link.Valid() {
 		go u.repository.DeleteLinkById(id)
 		return nil, nil
 	}
