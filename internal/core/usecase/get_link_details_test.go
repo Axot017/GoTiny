@@ -22,12 +22,13 @@ func TestGetLinkDetailsInvalidToken(t *testing.T) {
 	mockRepository := new(MockGetLinkDetailsRepository)
 	mockRepository.On("GetLinkById", "id").Return(&model.Link{
 		Token: "token",
-	}, nil)
+	}, nil).Once()
 
 	getLinkDetails := NewGetLinkDetails(mockRepository)
 	_, err := getLinkDetails.Call("id", "invalid_token")
 
 	assert.Equal(t, "invalid token", err.Error())
+	mockRepository.AssertExpectations(t)
 }
 
 func TestGetLinkDetailsValid(t *testing.T) {
@@ -35,10 +36,11 @@ func TestGetLinkDetailsValid(t *testing.T) {
 	link := model.Link{
 		Token: "token",
 	}
-	mockRepository.On("GetLinkById", "id").Return(&link, nil)
+	mockRepository.On("GetLinkById", "id").Return(&link, nil).Once()
 
 	getLinkDetails := NewGetLinkDetails(mockRepository)
 	result, _ := getLinkDetails.Call("id", "token")
 
 	assert.Equal(t, &link, result)
+	mockRepository.AssertExpectations(t)
 }

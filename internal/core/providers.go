@@ -7,5 +7,6 @@ func Providers() []interface{} {
 		usecase.NewCreateShortLink,
 		usecase.NewHitLink,
 		usecase.NewGetLinkDetails,
+		usecase.NewDeleteLink,
 	}
 }

@@ -42,6 +42,7 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	}
 
 	writer.Header().Set("Content-Type", "application/json")
+	writer.WriteHeader(http.StatusCreated)
 	json.NewEncoder(writer).Encode(link)
 }
 
