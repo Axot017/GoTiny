@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -27,7 +26,7 @@ func NewCreateLinkHandler(
 func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	create_link_dto, err := util.DeserializeAndValidateBody[dto.CreateLinkDto](request, h.validate)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
+		util.WriteError(writer, err)
 		return
 	}
 
@@ -38,12 +37,11 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	}
 	link, err := h.createShortLink.Call(create_link_dto.Link, config)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteError(writer, err)
+		return
 	}
 
-	writer.Header().Set("Content-Type", "application/json")
-	writer.WriteHeader(http.StatusCreated)
-	json.NewEncoder(writer).Encode(link)
+	util.WriteResponseJson(writer, link, http.StatusCreated)
 }
 
 func (h *CreateLinkHandler) Path() string {

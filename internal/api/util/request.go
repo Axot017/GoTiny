@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
+
+	"gotiny/internal/core/model"
 )
 
 func DeserializeAndValidateBody[T any](r *http.Request, validate *validator.Validate) (T, error) {
@@ -14,11 +16,30 @@ func DeserializeAndValidateBody[T any](r *http.Request, validate *validator.Vali
 	}
 
 	err = validate.Struct(dto)
-	return dto, err
+
+	if err != nil {
+		return dto, &model.AppError{
+			Type:    string(model.InvalidInputError),
+			Context: err,
+			Args: map[string]string{
+				"message": err.Error(),
+			},
+		}
+	}
+	return dto, nil
 }
 
 func DeserializeBody[T any](r *http.Request) (T, error) {
 	var dto T
 	err := json.NewDecoder(r.Body).Decode(&dto)
-	return dto, err
+	if err != nil {
+		return dto, &model.AppError{
+			Type:    string(model.InvalidInputError),
+			Context: err,
+			Args: map[string]string{
+				"message": err.Error(),
+			},
+		}
+	}
+	return dto, nil
 }

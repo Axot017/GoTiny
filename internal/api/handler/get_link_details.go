@@ -1,11 +1,12 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 
+	"gotiny/internal/api/util"
+	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
 
@@ -24,17 +25,16 @@ func (h *GetLinkDetails) ServeHTTP(writer http.ResponseWriter, request *http.Req
 	token := request.URL.Query().Get("token")
 	link, err := h.createShortLink.Call(id, token)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteError(writer, err)
 		return
 	}
 
 	if link == nil {
-		writer.WriteHeader(http.StatusNotFound)
+		util.WriteError(writer, model.NewNotFoundError())
 		return
 	}
 
-	writer.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(writer).Encode(link)
+	util.WriteResponseJson(writer, link)
 }
 
 func (h *GetLinkDetails) Path() string {

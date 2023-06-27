@@ -5,6 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	"gotiny/internal/api/util"
+	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
 
@@ -22,11 +24,11 @@ func (h *RedirectHandler) ServeHTTP(writer http.ResponseWriter, request *http.Re
 	id := chi.URLParam(request, "linkId")
 	url, err := h.hitLink.Call(id)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteError(writer, err)
 		return
 	}
 	if url == nil {
-		writer.WriteHeader(http.StatusNotFound)
+		util.WriteError(writer, model.NewNotFoundError())
 		return
 	}
 

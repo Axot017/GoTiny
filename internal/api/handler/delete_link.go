@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
+	"gotiny/internal/api/util"
 	"gotiny/internal/core/usecase"
 )
 
@@ -23,11 +24,11 @@ func (h *DeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	token := request.URL.Query().Get("token")
 	err := h.deleteLink.Call(id, token)
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteError(writer, err)
 		return
 	}
 
-	writer.WriteHeader(http.StatusNoContent)
+	util.WriteResponseJson(writer, nil, http.StatusNoContent)
 }
 
 func (h *DeleteLinkHandler) Path() string {
