@@ -27,7 +27,7 @@ func TestGetLinkDetailsInvalidToken(t *testing.T) {
 	getLinkDetails := NewGetLinkDetails(mockRepository)
 	_, err := getLinkDetails.Call("id", "invalid_token")
 
-	assert.Equal(t, "invalid token", err.Error())
+	assert.Equal(t, model.UnauthorizedError, err.Error())
 	mockRepository.AssertExpectations(t)
 }
 

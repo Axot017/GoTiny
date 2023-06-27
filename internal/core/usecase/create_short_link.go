@@ -29,14 +29,20 @@ func NewCreateShortLink(
 func (u *CreateShortLink) Call(url string, link_config model.LinkConfig) (model.Link, error) {
 	index, err := u.repository.GetNextLinkIndex()
 	if err != nil {
-		return model.Link{}, err
+		return model.Link{}, &model.AppError{
+			Type:    string(model.UnknownError),
+			Context: err,
+		}
 	}
 
 	link := model.NewFromIndex(index, url, link_config, u.config.BaseUrl())
 
 	err = u.repository.SaveLink(link)
 	if err != nil {
-		return model.Link{}, err
+		return model.Link{}, &model.AppError{
+			Type:    string(model.UnknownError),
+			Context: err,
+		}
 	}
 
 	return link, nil

@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"errors"
-
 	"gotiny/internal/core/model"
 )
 
@@ -23,13 +21,18 @@ func NewGetLinkDetails(repository GetLinkDetailsRepository) *GetLinkDetails {
 func (u *GetLinkDetails) Call(id string, token string) (*model.Link, error) {
 	link, err := u.repository.GetLinkById(id)
 	if err != nil {
-		return nil, err
+		return nil, &model.AppError{
+			Type:    string(model.UnknownError),
+			Context: err,
+		}
 	}
 	if link == nil {
 		return nil, nil
 	}
 	if link.Token != token {
-		return nil, errors.New("invalid token")
+		return nil, &model.AppError{
+			Type: string(model.UnauthorizedError),
+		}
 	}
 
 	return link, nil

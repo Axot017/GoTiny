@@ -23,7 +23,10 @@ func NewHitLink(repository HitLinkRepository) *HitLink {
 func (u *HitLink) Call(id string) (*string, error) {
 	link, err := u.repository.GetLinkById(id)
 	if err != nil {
-		return nil, err
+		return nil, &model.AppError{
+			Type:    string(model.UnknownError),
+			Context: err,
+		}
 	}
 
 	if link == nil {
