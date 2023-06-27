@@ -5,6 +5,7 @@ import (
 	"go.uber.org/fx"
 
 	"gotiny/internal/api/handler"
+	"gotiny/internal/api/util"
 )
 
 func Providers() []interface{} {
@@ -31,5 +32,6 @@ func Providers() []interface{} {
 			fx.As(new(RouteHandler)),
 		),
 		handler.NewRedirectHandler,
+		util.NewStructuredLogger,
 	}
 }

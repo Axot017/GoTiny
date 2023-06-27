@@ -12,6 +12,7 @@ import (
 
 	"gotiny/internal/api"
 	"gotiny/internal/api/handler"
+	"gotiny/internal/api/util"
 	"gotiny/internal/core"
 	"gotiny/internal/core/usecase"
 	"gotiny/internal/data"
@@ -21,7 +22,11 @@ func StartServer() {
 	fx.New(
 		fx.Provide(
 			newServer,
-			fx.Annotate(NewConfig, fx.As(new(usecase.CreateShortLinkConfig))),
+			fx.Annotate(
+				NewConfig,
+				fx.As(new(usecase.CreateShortLinkConfig)),
+				fx.As(new(core.LoggingConfig)),
+			),
 			fx.Annotate(
 				newMux,
 				fx.ParamTags(`group:"routes"`),
@@ -51,12 +56,16 @@ func startServer(lc fx.Lifecycle, server *http.Server) {
 	})
 }
 
-func newMux(handlers []api.RouteHandler, redirect_hander *handler.RedirectHandler) *chi.Mux {
+func newMux(
+	handlers []api.RouteHandler,
+	redirect_hander *handler.RedirectHandler,
+	logger *util.StructuredLogger,
+) *chi.Mux {
 	mux := chi.NewRouter()
 
+	mux.Use(middleware.RequestLogger(logger))
 	mux.Use(middleware.RequestID)
 	mux.Use(middleware.RealIP)
-	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
 
 	mux.Route("/api", func(r chi.Router) {
