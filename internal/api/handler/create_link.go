@@ -35,7 +35,7 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		ValidUntil: create_link_dto.ValidUntil,
 		Host:       request.Host,
 	}
-	link, err := h.createShortLink.Call(create_link_dto.Link, config)
+	link, err := h.createShortLink.Call(request.Context(), create_link_dto.Link, config)
 	if err != nil {
 		util.WriteError(writer, err)
 		return

@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"gotiny/internal/core/model"
 )
 
@@ -9,9 +11,9 @@ type CreateShortLinkConfig interface {
 }
 
 type CreateShortLinkRepository interface {
-	GetNextLinkIndex() (uint, error)
+	GetNextLinkIndex(ctx context.Context) (uint, error)
 
-	SaveLink(link model.Link) error
+	SaveLink(ctx context.Context, link model.Link) error
 }
 
 type CreateShortLink struct {
@@ -26,8 +28,12 @@ func NewCreateShortLink(
 	return &CreateShortLink{repository, config}
 }
 
-func (u *CreateShortLink) Call(url string, link_config model.LinkConfig) (model.Link, error) {
-	index, err := u.repository.GetNextLinkIndex()
+func (u *CreateShortLink) Call(
+	ctx context.Context,
+	url string,
+	link_config model.LinkConfig,
+) (model.Link, error) {
+	index, err := u.repository.GetNextLinkIndex(ctx)
 	if err != nil {
 		return model.Link{}, &model.AppError{
 			Type:    string(model.UnknownError),
@@ -37,7 +43,7 @@ func (u *CreateShortLink) Call(url string, link_config model.LinkConfig) (model.
 
 	link := model.NewFromIndex(index, url, link_config, u.config.BaseUrl())
 
-	err = u.repository.SaveLink(link)
+	err = u.repository.SaveLink(ctx, link)
 	if err != nil {
 		return model.Link{}, &model.AppError{
 			Type:    string(model.UnknownError),

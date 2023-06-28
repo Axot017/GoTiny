@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,10 @@ type MockGetLinkDetailsRepository struct {
 	mock.Mock
 }
 
-func (m *MockGetLinkDetailsRepository) GetLinkById(id string) (*model.Link, error) {
+func (m *MockGetLinkDetailsRepository) GetLinkById(
+	_ context.Context,
+	id string,
+) (*model.Link, error) {
 	args := m.Called(id)
 	return args.Get(0).(*model.Link), args.Error(1)
 }
@@ -25,7 +29,7 @@ func TestGetLinkDetailsInvalidToken(t *testing.T) {
 	}, nil).Once()
 
 	getLinkDetails := NewGetLinkDetails(mockRepository)
-	_, err := getLinkDetails.Call("id", "invalid_token")
+	_, err := getLinkDetails.Call(context.Background(), "id", "invalid_token")
 
 	assert.Equal(t, model.UnauthorizedError, err.Error())
 	mockRepository.AssertExpectations(t)
@@ -39,7 +43,7 @@ func TestGetLinkDetailsValid(t *testing.T) {
 	mockRepository.On("GetLinkById", "id").Return(&link, nil).Once()
 
 	getLinkDetails := NewGetLinkDetails(mockRepository)
-	result, _ := getLinkDetails.Call("id", "token")
+	result, _ := getLinkDetails.Call(context.Background(), "id", "token")
 
 	assert.Equal(t, &link, result)
 	mockRepository.AssertExpectations(t)

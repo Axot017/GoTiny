@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"golang.org/x/net/context"
 
 	"gotiny/internal/core/model"
 )
@@ -22,12 +23,12 @@ type mockLinksRepository struct {
 	mock.Mock
 }
 
-func (m *mockLinksRepository) GetNextLinkIndex() (uint, error) {
+func (m *mockLinksRepository) GetNextLinkIndex(_ context.Context) (uint, error) {
 	args := m.Called()
 	return args.Get(0).(uint), args.Error(1)
 }
 
-func (m *mockLinksRepository) SaveLink(link model.Link) error {
+func (m *mockLinksRepository) SaveLink(_ context.Context, link model.Link) error {
 	args := m.Called()
 	return args.Error(0)
 }
@@ -45,7 +46,7 @@ func TestCreateShortLink(t *testing.T) {
 	config := model.LinkConfig{
 		Host: "localhost:8080",
 	}
-	link, err := usecase.Call("https://www.google.com", config)
+	link, err := usecase.Call(context.Background(), "https://www.google.com", config)
 
 	assert.Nil(t, err)
 	assert.Equal(t, "https://www.google.com", link.OriginalLink)

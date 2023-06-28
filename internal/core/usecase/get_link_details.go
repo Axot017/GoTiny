@@ -1,11 +1,13 @@
 package usecase
 
 import (
+	"context"
+
 	"gotiny/internal/core/model"
 )
 
 type GetLinkDetailsRepository interface {
-	GetLinkById(id string) (*model.Link, error)
+	GetLinkById(ctx context.Context, id string) (*model.Link, error)
 }
 
 type GetLinkDetails struct {
@@ -18,8 +20,8 @@ func NewGetLinkDetails(repository GetLinkDetailsRepository) *GetLinkDetails {
 	}
 }
 
-func (u *GetLinkDetails) Call(id string, token string) (*model.Link, error) {
-	link, err := u.repository.GetLinkById(id)
+func (u *GetLinkDetails) Call(ctx context.Context, id string, token string) (*model.Link, error) {
+	link, err := u.repository.GetLinkById(ctx, id)
 	if err != nil {
 		return nil, &model.AppError{
 			Type:    string(model.UnknownError),

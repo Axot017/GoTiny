@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"sync"
 	"testing"
 
@@ -15,17 +16,17 @@ type MockHitLinkRepository struct {
 	wg sync.WaitGroup
 }
 
-func (m *MockHitLinkRepository) GetLinkById(id string) (*model.Link, error) {
+func (m *MockHitLinkRepository) GetLinkById(_ context.Context, id string) (*model.Link, error) {
 	args := m.Called(id)
 	return args.Get(0).(*model.Link), args.Error(1)
 }
 
-func (m *MockHitLinkRepository) DeleteLinkById(id string) error {
+func (m *MockHitLinkRepository) DeleteLinkById(_ context.Context, id string) error {
 	args := m.Called(id)
 	return args.Error(0)
 }
 
-func (m *MockHitLinkRepository) IncrementHitCount(id string) error {
+func (m *MockHitLinkRepository) IncrementHitCount(_ context.Context, id string) error {
 	args := m.Called(id)
 	m.wg.Done()
 	return args.Error(0)
@@ -40,7 +41,7 @@ func TestHitLinkValid(t *testing.T) {
 	repository.On("IncrementHitCount", "id").Return(nil).Once()
 
 	hitLink := NewHitLink(repository)
-	originalLink, err := hitLink.Call("id")
+	originalLink, err := hitLink.Call(context.Background(), "id")
 
 	assert.Nil(t, err)
 	assert.Equal(t, "original_link", *originalLink)

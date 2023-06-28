@@ -22,7 +22,7 @@ func NewRedirectHandler(hitLink *usecase.HitLink) *RedirectHandler {
 
 func (h *RedirectHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	id := chi.URLParam(request, "linkId")
-	url, err := h.hitLink.Call(id)
+	url, err := h.hitLink.Call(request.Context(), id)
 	if err != nil {
 		util.WriteError(writer, err)
 		return

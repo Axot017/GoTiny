@@ -22,7 +22,7 @@ func NewDeleteLinkHandler(deleteLink *usecase.DeleteLink) *DeleteLinkHandler {
 func (h *DeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	id := chi.URLParam(request, "linkId")
 	token := request.URL.Query().Get("token")
-	err := h.deleteLink.Call(id, token)
+	err := h.deleteLink.Call(request.Context(), id, token)
 	if err != nil {
 		util.WriteError(writer, err)
 		return

@@ -23,7 +23,7 @@ func NewGetLinkDetails(createShortLink *usecase.GetLinkDetails) *GetLinkDetails 
 func (h *GetLinkDetails) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	id := chi.URLParam(request, "linkId")
 	token := request.URL.Query().Get("token")
-	link, err := h.createShortLink.Call(id, token)
+	link, err := h.createShortLink.Call(request.Context(), id, token)
 	if err != nil {
 		util.WriteError(writer, err)
 		return

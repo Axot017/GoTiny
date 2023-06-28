@@ -1,13 +1,17 @@
 package usecase
 
-import "gotiny/internal/core/model"
+import (
+	"context"
+
+	"gotiny/internal/core/model"
+)
 
 type HitLinkRepository interface {
-	GetLinkById(id string) (*model.Link, error)
+	GetLinkById(ctx context.Context, id string) (*model.Link, error)
 
-	DeleteLinkById(id string) error
+	DeleteLinkById(ctx context.Context, id string) error
 
-	IncrementHitCount(id string) error
+	IncrementHitCount(ctx context.Context, id string) error
 }
 
 type HitLink struct {
@@ -20,8 +24,8 @@ func NewHitLink(repository HitLinkRepository) *HitLink {
 	}
 }
 
-func (u *HitLink) Call(id string) (*string, error) {
-	link, err := u.repository.GetLinkById(id)
+func (u *HitLink) Call(ctx context.Context, id string) (*string, error) {
+	link, err := u.repository.GetLinkById(ctx, id)
 	if err != nil {
 		return nil, &model.AppError{
 			Type:    string(model.UnknownError),
@@ -34,11 +38,11 @@ func (u *HitLink) Call(id string) (*string, error) {
 	}
 
 	if !link.Valid() {
-		go u.repository.DeleteLinkById(id)
+		go u.repository.DeleteLinkById(ctx, id)
 		return nil, nil
 	}
 
-	go u.repository.IncrementHitCount(id)
+	go u.repository.IncrementHitCount(ctx, id)
 
 	return &link.OriginalLink, nil
 }
