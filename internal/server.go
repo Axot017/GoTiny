@@ -16,6 +16,7 @@ import (
 	"gotiny/internal/core"
 	"gotiny/internal/core/usecase"
 	"gotiny/internal/data"
+	"gotiny/internal/data/adapter"
 )
 
 func StartServer() {
@@ -26,6 +27,7 @@ func StartServer() {
 				NewConfig,
 				fx.As(new(usecase.CreateShortLinkConfig)),
 				fx.As(new(core.LoggingConfig)),
+				fx.As(new(adapter.DynamodbConfig)),
 			),
 			fx.Annotate(
 				newMux,

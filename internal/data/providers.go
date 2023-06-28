@@ -16,5 +16,7 @@ func Providers() []interface{} {
 			fx.As(new(usecase.GetLinkDetailsRepository)),
 			fx.As(new(usecase.DeleteLinkRepository)),
 		),
+		newAwsConfig,
+		newDynamobdClient,
 	}
 }
