@@ -12,5 +12,5 @@ func TestBaseUrl(t *testing.T) {
 	os.Setenv("LOG_JSON", "true")
 	config := NewConfig()
 	assert.Equal(t, "https://www.google.com", config.BaseUrl())
-	assert.Equal(t, true, config.LogJson())
+	assert.True(t, config.LogJson())
 }

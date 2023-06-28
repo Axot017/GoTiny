@@ -22,5 +22,5 @@ func (c *Config) BaseUrl() string {
 }
 
 func (c *Config) LogJson() bool {
-	return false
+	return c.logJson
 }
