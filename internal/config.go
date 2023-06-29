@@ -17,7 +17,7 @@ func NewConfig() *Config {
 	flag.StringVar(
 		&cfg.linksTableName,
 		"links-dynamodb-table",
-		"gotiny_links",
+		"go-tiny-dev",
 		"DynamoDB table name for links",
 	)
 	flag.Parse()

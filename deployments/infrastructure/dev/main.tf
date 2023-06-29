@@ -1,0 +1,33 @@
+terraform {
+  backend "s3" {
+    bucket         = "go-tiny-tf-state"
+    key            = "dev/terraform.tfstate"
+    region         = "eu-central-1"
+    dynamodb_table = "go-tiny-tf-state-lock"
+    encrypt        = true
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.region
+}
+
+module "app" {
+  source = "../base"
+
+  env      = "dev"
+  app_name = var.app_name
+  region   = var.region
+}
+
+output "all_outputs" {
+  value     = module.app
+  sensitive = true
+}

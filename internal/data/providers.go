@@ -10,7 +10,7 @@ import (
 func Providers() []interface{} {
 	return []interface{}{
 		fx.Annotate(
-			adapter.NewLocalLinksRepository,
+			adapter.NewDynamodbLinksRepository,
 			fx.As(new(usecase.CreateShortLinkRepository)),
 			fx.As(new(usecase.HitLinkRepository)),
 			fx.As(new(usecase.GetLinkDetailsRepository)),
