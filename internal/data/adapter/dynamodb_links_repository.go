@@ -36,10 +36,10 @@ func (r *DynamodbLinksRepository) GetNextLinkIndex(ctx context.Context) (uint, e
 	result, err := r.client.UpdateItem(ctx, &dynamodb.UpdateItemInput{
 		TableName: aws.String(r.config.LinksTableName()),
 		Key: map[string]types.AttributeValue{
-			"PK": types.AttributeValueMemberS{
+			"PK": &types.AttributeValueMemberS{
 				Value: linksGlobalDataPK,
 			},
-			"SK": types.AttributeValueMemberS{
+			"SK": &types.AttributeValueMemberS{
 				Value: linksGlobalIndexSK,
 			},
 		},
@@ -48,7 +48,7 @@ func (r *DynamodbLinksRepository) GetNextLinkIndex(ctx context.Context) (uint, e
 			"#index": "index",
 		},
 		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":inc": types.AttributeValueMemberN{
+			":inc": &types.AttributeValueMemberN{
 				Value: "1",
 			},
 		},
