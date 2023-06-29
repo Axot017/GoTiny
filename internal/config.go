@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"flag"
+	"os"
 )
 
 type Config struct {
@@ -11,18 +11,21 @@ type Config struct {
 }
 
 func NewConfig() *Config {
-	cfg := Config{}
-	flag.StringVar(&cfg.baseUrl, "base-url", "http://localhost:8080", "Base URL for shor links")
-	flag.BoolVar(&cfg.logJson, "log-json", false, "User JSON format for logging")
-	flag.StringVar(
-		&cfg.linksTableName,
-		"links-dynamodb-table",
-		"go-tiny-dev",
-		"DynamoDB table name for links",
-	)
-	flag.Parse()
+	baseUrl := os.Getenv("BASE_URL")
+	if baseUrl == "" {
+		baseUrl = "http://localhost:8080"
+	}
+	logJson := os.Getenv("LOG_JSON") == "true"
+	linksTableName := os.Getenv("LINKS_DYNAMODB_TABLE")
+	if linksTableName == "" {
+		linksTableName = "go-tiny-dev"
+	}
 
-	return &cfg
+	return &Config{
+		baseUrl:        baseUrl,
+		logJson:        logJson,
+		linksTableName: linksTableName,
+	}
 }
 
 func (c *Config) BaseUrl() string {
