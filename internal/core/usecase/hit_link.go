@@ -38,11 +38,11 @@ func (u *HitLink) Call(ctx context.Context, id string) (*string, error) {
 	}
 
 	if !link.Valid() {
-		go u.repository.DeleteLinkById(ctx, id)
+		go u.repository.DeleteLinkById(context.Background(), id)
 		return nil, nil
 	}
 
-	go u.repository.IncrementHitCount(ctx, id)
+	go u.repository.IncrementHitCount(context.Background(), id)
 
 	return &link.OriginalLink, nil
 }
