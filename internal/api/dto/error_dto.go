@@ -1,6 +1,9 @@
 package dto
 
-import "gotiny/internal/core/model"
+import (
+	"gotiny/internal/core/model"
+	"gotiny/internal/core/usecase"
+)
 
 type ErrorDto struct {
 	Code    string            `json:"code"`
@@ -13,6 +16,7 @@ var typeMapping map[string]string = map[string]string{
 	model.NotFoundError:     "not_found",
 	model.UnauthorizedError: "unauthorized",
 	model.InvalidInputError: "input_error",
+	usecase.InvalidUrlError: "invalid_url",
 }
 
 var messageMapping map[string]string = map[string]string{
@@ -20,6 +24,7 @@ var messageMapping map[string]string = map[string]string{
 	model.NotFoundError:     "Not found",
 	model.UnauthorizedError: "Unauthorized",
 	model.InvalidInputError: "Invalid input",
+	usecase.InvalidUrlError: "Invalid url",
 }
 
 func ErrorDtoFromError(err error) ErrorDto {

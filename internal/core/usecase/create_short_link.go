@@ -6,8 +6,16 @@ import (
 	"gotiny/internal/core/model"
 )
 
+const (
+	InvalidUrlError = "invalid_url"
+)
+
 type CreateShortLinkConfig interface {
 	BaseUrl() string
+}
+
+type UrlChecker interface {
+	CheckUrl(ctx context.Context, url string) (bool, error)
 }
 
 type CreateShortLinkRepository interface {
@@ -19,13 +27,15 @@ type CreateShortLinkRepository interface {
 type CreateShortLink struct {
 	repository CreateShortLinkRepository
 	config     CreateShortLinkConfig
+	urlChecker UrlChecker
 }
 
 func NewCreateShortLink(
 	repository CreateShortLinkRepository,
 	config CreateShortLinkConfig,
+	urlChecker UrlChecker,
 ) *CreateShortLink {
-	return &CreateShortLink{repository, config}
+	return &CreateShortLink{repository, config, urlChecker}
 }
 
 func (u *CreateShortLink) Call(
@@ -33,6 +43,14 @@ func (u *CreateShortLink) Call(
 	url string,
 	link_config model.LinkConfig,
 ) (model.Link, error) {
+	isValid, err := u.urlChecker.CheckUrl(ctx, url)
+
+	if err == nil && !isValid {
+		return model.Link{}, &model.AppError{
+			Type: InvalidUrlError,
+		}
+	}
+
 	index, err := u.repository.GetNextLinkIndex(ctx)
 	if err != nil {
 		return model.Link{}, &model.AppError{
