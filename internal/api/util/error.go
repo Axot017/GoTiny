@@ -5,6 +5,7 @@ import (
 
 	"gotiny/internal/api/dto"
 	"gotiny/internal/core/model"
+	"gotiny/internal/core/usecase"
 )
 
 var statusCodeMapping = map[string]int{
@@ -12,6 +13,7 @@ var statusCodeMapping = map[string]int{
 	model.NotFoundError:     http.StatusNotFound,
 	model.UnknownError:      http.StatusInternalServerError,
 	model.InvalidInputError: http.StatusBadRequest,
+	usecase.InvalidUrlError: http.StatusBadRequest,
 }
 
 func statusCodeFromError(err error) int {

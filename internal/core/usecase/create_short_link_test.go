@@ -10,6 +10,15 @@ import (
 	"gotiny/internal/core/model"
 )
 
+type mockUrlChecker struct {
+	mock.Mock
+}
+
+func (m *mockUrlChecker) CheckUrl(ctx context.Context, url string) (bool, error) {
+	args := m.Called(url)
+	return args.Bool(0), args.Error(1)
+}
+
 type mockCoreConfig struct {
 	mock.Mock
 }
@@ -41,7 +50,10 @@ func TestCreateShortLink(t *testing.T) {
 	core_config := new(mockCoreConfig)
 	core_config.On("BaseUrl").Return("http://localhost:8080").Once()
 
-	usecase := NewCreateShortLink(repo, core_config)
+	url_checker := new(mockUrlChecker)
+	url_checker.On("CheckUrl", "https://www.google.com").Return(true, nil).Once()
+
+	usecase := NewCreateShortLink(repo, core_config, url_checker)
 
 	config := model.LinkConfig{
 		Host: "localhost:8080",
