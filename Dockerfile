@@ -8,14 +8,14 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o=gotiny cmd/gotiny/main.go
+RUN CGO_ENABLED=0 go build -o ./gotiny cmd/gotiny/main.go
 
-FROM  alpine:latest
-
-EXPOSE 8080
+FROM scratch
 
 WORKDIR /app
 
-COPY --from=builder /app/gotiny ./gotiny
+COPY --from=builder /app/gotiny .
 
-ENTRYPOINT ["./gotiny"]
+EXPOSE 8080
+
+CMD ["./gotiny"]
