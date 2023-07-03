@@ -12,6 +12,8 @@ RUN go build -o=gotiny cmd/gotiny/main.go
 
 FROM  alpine:latest
 
+EXPOSE 8080
+
 WORKDIR /app
 
 COPY --from=builder /app/gotiny ./gotiny
