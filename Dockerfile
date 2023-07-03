@@ -1,4 +1,4 @@
-FROM golang:1.20 as builder
+FROM golang:1.20-alpine3.17 as builder
 
 WORKDIR /app
 
@@ -8,9 +8,9 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o ./gotiny cmd/gotiny/main.go
+RUN go build -o ./gotiny cmd/gotiny/main.go
 
-FROM scratch
+FROM alpine:3.17
 
 WORKDIR /app
 
