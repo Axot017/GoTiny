@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	openapi "github.com/go-openapi/runtime/middleware"
 	"go.uber.org/fx"
 
 	"gotiny/internal/api"
@@ -65,12 +66,30 @@ func newMux(
 ) *chi.Mux {
 	mux := chi.NewRouter()
 
+	redocOpts := openapi.RedocOpts{
+		SpecURL:  "swagger.yaml",
+		BasePath: "/api",
+		Path:     "/docs",
+	}
+	redoc := openapi.Redoc(redocOpts, nil)
+
+	swatterUIOpts := openapi.SwaggerUIOpts{
+		SpecURL:  "swagger.yaml",
+		BasePath: "/api",
+		Path:     "/swagger-ui",
+	}
+	swaggerUI := openapi.SwaggerUI(swatterUIOpts, nil)
+
 	mux.Use(middleware.RequestLogger(logger))
 	mux.Use(middleware.RequestID)
 	mux.Use(middleware.RealIP)
 	mux.Use(middleware.Recoverer)
 
 	mux.Route("/api", func(r chi.Router) {
+		r.Method(http.MethodGet, "/docs", redoc)
+		r.Method(http.MethodGet, "/swagger-ui", swaggerUI)
+		r.Method(http.MethodGet, "/swagger.yaml", http.FileServer(http.Dir("./")))
+
 		for _, h := range handlers {
 			r.Method(h.Method(), h.Path(), h)
 		}

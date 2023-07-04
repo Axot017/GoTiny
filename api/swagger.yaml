@@ -1,0 +1,230 @@
+basePath: /
+consumes:
+    - application/json
+definitions:
+    CreateLinkDto:
+        properties:
+            link:
+                description: Link to be shortened
+                example: https://google.com
+                type: string
+                x-go-name: Link
+            max_hits:
+                description: Max link visits. If not provided, the link will be valid forever
+                example: 10
+                format: uint64
+                minimum: 1
+                type: integer
+                x-go-name: MaxHits
+            valid_until:
+                description: Valid until in iso8601 format. If not provided, the link will be valid forever
+                example: "2021-01-01T00:00:00Z"
+                format: date-time
+                type: string
+                x-go-name: ValidUntil
+        required:
+            - link
+        type: object
+        x-go-package: gotiny/internal/api/dto
+    ErrorDto:
+        description: Error Dto
+        properties:
+            args:
+                additionalProperties:
+                    type: string
+                description: Additional arguments
+                example:
+                    arg1: value1
+                    arg2: value2
+                type: object
+                x-go-name: Args
+            code:
+                description: Error code - for programmatic error handling
+                example: internal_server_error
+                type: string
+                x-go-name: Code
+            message:
+                description: Error message - human readable
+                example: Internal server error
+                type: string
+                x-go-name: Message
+        required:
+            - code
+            - message
+        type: object
+        x-go-package: gotiny/internal/api/dto
+    LinkDto:
+        properties:
+            created_at:
+                description: Link creation date
+                format: date-time
+                type: string
+                x-go-name: CreatedAt
+            hits:
+                description: Link visits
+                example: 42
+                format: uint64
+                type: integer
+                x-go-name: Hits
+            id:
+                description: Link id
+                example: abc123
+                type: string
+                x-go-name: Id
+            max_hits:
+                description: |-
+                    Number of link visits allowed, after which the link will be deleted.
+                    If not provided, the link will be valid forever
+                format: uint64
+                type: integer
+                x-go-name: MaxHits
+            original_link:
+                description: Original link
+                example: https://google.com
+                type: string
+                x-go-name: OriginalLink
+            short_link:
+                description: Short link
+                example: https://{base_url}/abc123
+                type: string
+                x-go-name: ShortLink
+            token:
+                description: Link token - used for link deletion and fetching link details
+                type: string
+                x-go-name: Token
+            valid_until:
+                description: Link expiration date. If not provided, the link will be valid forever
+                format: date-time
+                type: string
+                x-go-name: ValidUntil
+        required:
+            - id
+            - short_link
+            - original_link
+            - token
+            - hits
+            - created_at
+        type: object
+        x-go-package: gotiny/internal/api/dto
+host: yfe9pxjetr.eu-central-1.awsapprunner.com
+info:
+    contact:
+        email: mateuszledwon@duck.com
+        name: Mateusz Ledwoń
+        url: https://github.com/Axot017
+    description: 'TODO: add description'
+    title: GoTiny API
+    version: 0.0.1
+paths:
+    /{linkId}:
+        get:
+            description: This will redirect to the original URL.
+            operationId: redirect
+            responses:
+                "302":
+                    $ref: '#/responses/emptyResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            summary: Redirect
+    /api/health:
+        get:
+            description: This will check if the service is up and running.
+            operationId: health
+            responses:
+                "200":
+                    $ref: '#/responses/emptyResponse'
+            summary: Health check
+    /api/v1/link:
+        post:
+            description: This will create a short link.
+            operationId: createLink
+            parameters:
+                - in: body
+                  name: Body
+                  schema:
+                    $ref: '#/definitions/CreateLinkDto'
+            responses:
+                "201":
+                    $ref: '#/responses/createLinkResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            summary: Create short link
+            tags:
+                - link
+    /api/v1/link/{linkId}:
+        delete:
+            description: Delete link with given id.
+            operationId: deleteLink
+            parameters:
+                - in: path
+                  name: linkId
+                  required: true
+                  type: string
+                  x-go-name: LinkId
+                - in: query
+                  name: token
+                  type: string
+                  x-go-name: Token
+            responses:
+                "204":
+                    $ref: '#/responses/emptyResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
+                "401":
+                    $ref: '#/responses/errorResponse'
+                "404":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            summary: Delete link
+            tags:
+                - link
+        get:
+            description: Get details of link with given id.
+            operationId: getLinkDetails
+            parameters:
+                - in: path
+                  name: linkId
+                  required: true
+                  type: string
+                  x-go-name: LinkId
+                - in: query
+                  name: token
+                  type: string
+                  x-go-name: Token
+            responses:
+                "200":
+                    $ref: '#/responses/getLinkDetailsResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
+                "401":
+                    $ref: '#/responses/errorResponse'
+                "404":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            summary: Get link details
+            tags:
+                - link
+produces:
+    - application/json
+responses:
+    createLinkResponse:
+        description: ""
+        schema:
+            $ref: '#/definitions/LinkDto'
+    emptyResponse:
+        description: Empty response
+    errorResponse:
+        description: Error response
+        schema:
+            $ref: '#/definitions/ErrorDto'
+    getLinkDetailsResponse:
+        description: ""
+        schema:
+            $ref: '#/definitions/LinkDto'
+schemes:
+    - https
+swagger: "2.0"

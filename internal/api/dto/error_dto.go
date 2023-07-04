@@ -5,10 +5,25 @@ import (
 	"gotiny/internal/core/usecase"
 )
 
+// Error Dto
+//
+// swagger:model
 type ErrorDto struct {
-	Code    string            `json:"code"`
-	Message string            `json:"message"`
-	Args    map[string]string `json:"args,omitempty"`
+	// Error code - for programmatic error handling
+	//
+	// example: internal_server_error
+	// required: true
+	Code string `json:"code"`
+	// Error message - human readable
+	//
+	// example: Internal server error
+	// required: true
+	Message string `json:"message"`
+	// Additional arguments
+	//
+	// example: {"arg1": "value1", "arg2": "value2"}
+	// required: false
+	Args map[string]string `json:"args,omitempty"`
 }
 
 var typeMapping map[string]string = map[string]string{
