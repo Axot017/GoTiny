@@ -10,6 +10,16 @@ import (
 	"gotiny/internal/core/usecase"
 )
 
+// swagger:route GET /{linkId} redirect
+//
+// # Redirect
+//
+// This will redirect to the original URL.
+//
+// Responses:
+//
+//	302: emptyResponse
+//	500: errorResponse
 type RedirectHandler struct {
 	hitLink *usecase.HitLink
 }

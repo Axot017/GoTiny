@@ -11,6 +11,29 @@ import (
 	"gotiny/internal/core/usecase"
 )
 
+// swagger:parameters createLink
+type createLinkParams struct {
+	// in: body
+	Body dto.CreateLinkDto
+}
+
+// swagger:response createLinkResponse
+type createLinkResponse struct {
+	// in: body
+	Body dto.LinkDto
+}
+
+// swagger:route POST /api/v1/link link createLink
+//
+// # Create short link
+//
+// This will create a short link.
+//
+// Responses:
+//
+//	201: createLinkResponse
+//	400: errorResponse
+//	500: errorResponse
 type CreateLinkHandler struct {
 	createShortLink *usecase.CreateShortLink
 	validate        *validator.Validate
@@ -40,8 +63,9 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		util.WriteError(writer, err)
 		return
 	}
+	dto := dto.LinkDtoFromModel(link)
 
-	util.WriteResponseJson(writer, link, http.StatusCreated)
+	util.WriteResponseJson(writer, dto, http.StatusCreated)
 }
 
 func (h *CreateLinkHandler) Path() string {

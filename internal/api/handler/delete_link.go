@@ -9,6 +9,27 @@ import (
 	"gotiny/internal/core/usecase"
 )
 
+// swagger:parameters deleteLink
+type deleteLinkParams struct {
+	// in: path
+	LinkId string `json:"linkId"`
+	// in: query
+	Token string `json:"token"`
+}
+
+// swagger:route DELETE /api/v1/link/{linkId} link deleteLink
+//
+// # Delete link
+//
+// Delete link with given id.
+//
+// Responses:
+//
+//	204: emptyResponse
+//	400: errorResponse
+//	401: errorResponse
+//	404: errorResponse
+//	500: errorResponse
 type DeleteLinkHandler struct {
 	deleteLink *usecase.DeleteLink
 }

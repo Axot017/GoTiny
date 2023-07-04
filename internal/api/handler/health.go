@@ -2,6 +2,15 @@ package handler
 
 import "net/http"
 
+// swagger:route GET /api/health health
+//
+// # Health check
+//
+// This will check if the service is up and running.
+//
+// Responses:
+//
+//	200: emptyResponse
 type HealthHandler struct{}
 
 func NewHealthHandler() *HealthHandler {
