@@ -5,6 +5,11 @@ resource "aws_apprunner_service" "app" {
     image_repository {
       image_configuration {
         port = "8080"
+        runtime_environment_variables = {
+          "BASE_URL"             = "https://${var.app_base_url}",
+          "LOG_JSON"             = "true",
+          "LINKS_DYNAMODB_TABLE" = aws_dynamodb_table.links.name,
+        }
       }
       image_identifier      = "${aws_ecr_repository.gotidy.repository_url}:latest"
       image_repository_type = "ECR"
@@ -52,4 +57,20 @@ resource "aws_apprunner_auto_scaling_configuration_version" "app" {
     App = var.app_name
     Env = var.env
   }
+}
+
+resource "aws_apprunner_custom_domain_association" "app" {
+  domain_name          = var.app_base_url
+  service_arn          = aws_apprunner_service.app.arn
+  enable_www_subdomain = false
+}
+
+output "app_certificate_validation_records" {
+  value     = aws_apprunner_custom_domain_association.app.certificate_validation_records
+  sensitive = true
+}
+
+output "app_dns_target" {
+  value     = aws_apprunner_custom_domain_association.app.dns_target
+  sensitive = true
 }

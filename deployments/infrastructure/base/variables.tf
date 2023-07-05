@@ -14,3 +14,7 @@ variable "region" {
 variable "app_name" {
   type = string
 }
+
+variable "app_base_url" {
+  type = string
+}
