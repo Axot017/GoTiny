@@ -106,7 +106,6 @@ definitions:
             - created_at
         type: object
         x-go-package: gotiny/internal/api/dto
-host: yfe9pxjetr.eu-central-1.awsapprunner.com
 info:
     contact:
         email: mateuszledwon@duck.com
@@ -233,6 +232,4 @@ responses:
         description: ""
         schema:
             $ref: '#/definitions/LinkDto'
-schemes:
-    - https
 swagger: "2.0"

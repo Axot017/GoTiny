@@ -2,8 +2,6 @@
 //
 // TODO: add description
 //
-//	Schemes: https
-//	Host: yfe9pxjetr.eu-central-1.awsapprunner.com
 //	BasePath: /
 //	Version: 0.0.1
 //	Contact: Mateusz Ledwoń<mateuszledwon@duck.com> https://github.com/Axot017

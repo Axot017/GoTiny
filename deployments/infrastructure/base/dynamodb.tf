@@ -1,5 +1,5 @@
-resource "aws_dynamodb_table" "profile" {
-  name         = "${var.app_name}-${var.env}"
+resource "aws_dynamodb_table" "links" {
+  name         = "links-${var.app_name}-${var.env}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "PK"
   range_key    = "SK"
@@ -85,9 +85,9 @@ resource "aws_dynamodb_table" "profile" {
 }
 
 output "dynamodb_table_name" {
-  value = aws_dynamodb_table.profile.name
+  value = aws_dynamodb_table.links.name
 }
 
 output "dynamodb_table_arn" {
-  value = aws_dynamodb_table.profile.arn
+  value = aws_dynamodb_table.links.arn
 }

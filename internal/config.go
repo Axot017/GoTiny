@@ -18,7 +18,7 @@ func NewConfig() *Config {
 	logJson := os.Getenv("LOG_JSON") == "true"
 	linksTableName := os.Getenv("LINKS_DYNAMODB_TABLE")
 	if linksTableName == "" {
-		linksTableName = "go-tiny-dev"
+		linksTableName = "links-go-tiny-dev"
 	}
 
 	return &Config{

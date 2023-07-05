@@ -22,9 +22,10 @@ provider "aws" {
 module "app" {
   source = "../base"
 
-  env      = "dev"
-  app_name = var.app_name
-  region   = var.region
+  env          = "dev"
+  app_name     = var.app_name
+  region       = var.region
+  app_base_url = "dev.goti.one"
 }
 
 output "all_outputs" {
