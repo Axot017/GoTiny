@@ -10,7 +10,13 @@ import (
 	"gotiny/internal/core/usecase"
 )
 
-// swagger:route GET /{linkId} redirect
+// swagger:parameters redirect
+type redirectParams struct {
+	// in: path
+	LinkId string `json:"linkId"`
+}
+
+// swagger:route GET /{linkId} redirect redirect
 //
 // # Redirect
 //
