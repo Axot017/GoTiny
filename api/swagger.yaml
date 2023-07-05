@@ -120,12 +120,20 @@ paths:
         get:
             description: This will redirect to the original URL.
             operationId: redirect
+            parameters:
+                - in: path
+                  name: linkId
+                  required: true
+                  type: string
+                  x-go-name: LinkId
             responses:
                 "302":
                     $ref: '#/responses/emptyResponse'
                 "500":
                     $ref: '#/responses/errorResponse'
             summary: Redirect
+            tags:
+                - redirect
     /api/health:
         get:
             description: This will check if the service is up and running.
