@@ -14,6 +14,8 @@ FROM alpine:3.17
 
 WORKDIR /app
 
+COPY --from=builder /app/api/. ./api
+
 COPY --from=builder /app/gotiny .
 
 EXPOSE 8080
