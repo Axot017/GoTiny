@@ -19,7 +19,8 @@ type LinkDto struct {
 	Token        string
 	Hits         uint
 	MaxHits      *uint
-	Ttl          *uint
+	TTL          *uint
+	TrackUntil   *time.Time
 	CreatedAt    time.Time
 }
 
@@ -37,15 +38,16 @@ func LinkDtoFromLink(link model.Link) LinkDto {
 		Token:        link.Token,
 		Hits:         link.Hits,
 		MaxHits:      link.MaxHits,
-		Ttl:          ttl,
+		TTL:          ttl,
+		TrackUntil:   link.TrackUntil,
 		CreatedAt:    link.CreatedAt,
 	}
 }
 
 func (d LinkDto) ToLink() model.Link {
 	var validUntil *time.Time
-	if d.Ttl != nil {
-		t := time.Unix(int64(*d.Ttl), 0)
+	if d.TTL != nil {
+		t := time.Unix(int64(*d.TTL), 0)
 		validUntil = &t
 	}
 	return model.Link{
@@ -57,5 +59,6 @@ func (d LinkDto) ToLink() model.Link {
 		MaxHits:      d.MaxHits,
 		ValidUntil:   validUntil,
 		CreatedAt:    d.CreatedAt,
+		TrackUntil:   d.TrackUntil,
 	}
 }

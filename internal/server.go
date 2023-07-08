@@ -80,9 +80,9 @@ func newMux(
 	}
 	swaggerUI := openapi.SwaggerUI(swatterUIOpts, nil)
 
+	mux.Use(middleware.RealIP)
 	mux.Use(middleware.RequestLogger(logger))
 	mux.Use(middleware.RequestID)
-	mux.Use(middleware.RealIP)
 	mux.Use(middleware.Recoverer)
 
 	mux.Route("/api", func(r chi.Router) {

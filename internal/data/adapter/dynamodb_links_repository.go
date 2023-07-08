@@ -2,11 +2,13 @@ package adapter
 
 import (
 	"context"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/segmentio/ksuid"
 	"golang.org/x/exp/slog"
 
 	"gotiny/internal/core/model"
@@ -177,6 +179,38 @@ func (r *DynamodbLinksRepository) init() error {
 		TableName: aws.String(r.config.LinksTableName()),
 		Item:      formatedData,
 	})
+
+	return nil
+}
+
+func (r *DynamodbLinksRepository) SaveRedirectRequestData(
+	ctx context.Context,
+	linkId string,
+	requestData model.RedirecsRequestData,
+) error {
+	dto := dto.LinkVisitDto{
+		PK:        dto.LinkVisitPKPrefix + linkId,
+		SK:        dto.LinkVisitSKPrefix + ksuid.New().String(),
+		Ip:        requestData.Ip,
+		UserAgent: requestData.UserAgent,
+		CreatedAt: time.Now(),
+		TTL:       new(uint),
+	}
+	avs, err := attributevalue.MarshalMap(dto)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error marshalling link visit", "err", err)
+		return err
+	}
+
+	_, err = r.client.PutItem(ctx, &dynamodb.PutItemInput{
+		TableName: aws.String(r.config.LinksTableName()),
+		Item:      avs,
+	})
+
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error saving link visit", "err", err)
+		return err
+	}
 
 	return nil
 }
