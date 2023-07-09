@@ -12,6 +12,7 @@ import (
 	"golang.org/x/exp/slog"
 
 	"gotiny/internal/core/model"
+	core_util "gotiny/internal/core/util"
 	"gotiny/internal/data/dto"
 	"gotiny/internal/data/util"
 )
@@ -20,6 +21,7 @@ const (
 	linksGlobalDataPK  = "LINKS_GLOBAL"
 	linksGlobalIndexSK = "INDEX"
 	indexKey           = "Index"
+	pageLimit          = 30
 )
 
 type DynamodbConfig interface {
@@ -213,4 +215,51 @@ func (r *DynamodbLinksRepository) SaveRedirectRequestData(
 	}
 
 	return nil
+}
+
+func (r *DynamodbLinksRepository) GetLinkVisits(
+	ctx context.Context,
+	linkId string,
+	page *string,
+) (model.PagedResponse[model.LinkVisit], error) {
+	lastEvaluatedKey, err := util.DecodePrimaryPageToken(page)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
+		return model.PagedResponse[model.LinkVisit]{}, err
+	}
+	result, err := r.client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(r.config.LinksTableName()),
+		KeyConditionExpression: aws.String("PK = :pk AND begins_with(SK, :sk)"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":pk": &types.AttributeValueMemberS{Value: dto.LinkVisitPKPrefix + linkId},
+			":sk": &types.AttributeValueMemberS{Value: dto.LinkVisitSKPrefix},
+		},
+		Limit:             aws.Int32(pageLimit),
+		ExclusiveStartKey: lastEvaluatedKey,
+		ScanIndexForward:  aws.Bool(false),
+	})
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error getting link visits", "err", err)
+		return model.PagedResponse[model.LinkVisit]{}, err
+	}
+
+	var visits []dto.LinkVisitDto
+	err = attributevalue.UnmarshalListOfMaps(result.Items, &visits)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error unmarshalling link visits", "err", err)
+		return model.PagedResponse[model.LinkVisit]{}, err
+	}
+	pageToken, err := util.EncodePrimaryPageToken(result.LastEvaluatedKey)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
+		return model.PagedResponse[model.LinkVisit]{}, err
+	}
+
+	return model.PagedResponse[model.LinkVisit]{
+		Items: core_util.MapSlice[dto.LinkVisitDto, model.LinkVisit](
+			visits,
+			dto.LinkVisitDtoToModel,
+		),
+		PageToken: pageToken,
+	}, nil
 }

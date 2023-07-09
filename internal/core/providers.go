@@ -13,6 +13,7 @@ func Providers() []interface{} {
 		usecase.NewHitLink,
 		usecase.NewGetLinkDetails,
 		usecase.NewDeleteLink,
+		usecase.NewGetLinkVisits,
 		fx.Annotate(NewSlogHandler, fx.As(new(slog.Handler))),
 	}
 }
