@@ -10,7 +10,7 @@ import (
 	"gotiny/internal/core/usecase"
 )
 
-// swagger:parameters getLinkDetails
+// swagger:parameters getVisits
 type getVisitsParams struct {
 	// in: path
 	LinkId string `json:"linkId"`
@@ -20,7 +20,7 @@ type getVisitsParams struct {
 	Page *string `json:"page"`
 }
 
-// swagger:response getLinkDetailsResponse
+// swagger:response getVisitsResponse
 type getVisitsResponse struct {
 	// in: body
 	Body []dto.VisitDto
@@ -38,7 +38,7 @@ type GetVisitsHandler struct {
 //
 // Responses:
 //
-//	200: getLinkDetailsResponse
+//	200: getVisitsResponse
 //	400: errorResponse
 //	401: errorResponse
 //	404: errorResponse
