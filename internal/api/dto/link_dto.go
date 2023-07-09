@@ -45,6 +45,12 @@ type LinkDto struct {
 	//
 	// required: true
 	CreatedAt time.Time `json:"created_at"`
+
+	// Data about link visits will be stored until this date.
+	//
+	// example: 2021-01-01T00:00:00Z
+	// required: false
+	TrackUntil *time.Time `json:"track_until" validate:"omitempty"`
 }
 
 func LinkDtoFromModel(link model.Link) LinkDto {
@@ -57,5 +63,6 @@ func LinkDtoFromModel(link model.Link) LinkDto {
 		MaxHits:      link.MaxHits,
 		ValidUntil:   link.ValidUntil,
 		CreatedAt:    link.CreatedAt,
+		TrackUntil:   link.TrackUntil,
 	}
 }
