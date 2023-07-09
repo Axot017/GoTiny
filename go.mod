@@ -53,6 +53,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/segmentio/ksuid v1.0.4 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	go.mongodb.org/mongo-driver v1.11.3 // indirect
 	go.uber.org/atomic v1.7.0 // indirect

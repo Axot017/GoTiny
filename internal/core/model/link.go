@@ -9,14 +9,15 @@ import (
 const tokenLength = 16
 
 type Link struct {
-	Id           string     `json:"id"`
-	ShortLink    string     `json:"short_link"`
-	OriginalLink string     `json:"original_link"`
-	Token        string     `json:"token"`
-	Hits         uint       `json:"hits"`
-	MaxHits      *uint      `json:"max_hits,omitempty"`
-	ValidUntil   *time.Time `json:"valid_until,omitempty"`
-	CreatedAt    time.Time  `json:"created_at"`
+	Id           string
+	ShortLink    string
+	OriginalLink string
+	Token        string
+	Hits         uint
+	MaxHits      *uint
+	ValidUntil   *time.Time
+	TrackUntil   *time.Time
+	CreatedAt    time.Time
 }
 
 func NewFromIndex(index uint, url string, config LinkConfig, baseUrl string) Link {
@@ -31,6 +32,7 @@ func NewFromIndex(index uint, url string, config LinkConfig, baseUrl string) Lin
 		OriginalLink: url,
 		CreatedAt:    now,
 		MaxHits:      config.MaxHits,
+		TrackUntil:   config.TrackUntil,
 		ValidUntil:   config.ValidUntil,
 	}
 }
