@@ -15,6 +15,7 @@ func Providers() []interface{} {
 			fx.As(new(usecase.HitLinkRepository)),
 			fx.As(new(usecase.GetLinkDetailsRepository)),
 			fx.As(new(usecase.DeleteLinkRepository)),
+			fx.As(new(usecase.GetLinkVisitsRepository)),
 		),
 		fx.Annotate(
 			adapter.NewHttpClient,

@@ -42,7 +42,7 @@ type GetLinkDetails struct {
 	createShortLink *usecase.GetLinkDetails
 }
 
-func NewGetLinkDetails(createShortLink *usecase.GetLinkDetails) *GetLinkDetails {
+func NewGetLinkDetailsHandler(createShortLink *usecase.GetLinkDetails) *GetLinkDetails {
 	return &GetLinkDetails{
 		createShortLink: createShortLink,
 	}

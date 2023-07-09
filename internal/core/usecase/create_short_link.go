@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"gotiny/internal/core/model"
 )
@@ -12,6 +13,8 @@ const (
 
 type CreateShortLinkConfig interface {
 	BaseUrl() string
+
+	MaxTrackingDays() uint
 }
 
 type UrlChecker interface {
@@ -60,6 +63,7 @@ func (u *CreateShortLink) Call(
 	}
 
 	link := model.NewFromIndex(index, url, link_config, u.config.BaseUrl())
+	link.TrackUntil = u.getTrackUntilDate(link)
 
 	err = u.repository.SaveLink(ctx, link)
 	if err != nil {
@@ -70,4 +74,18 @@ func (u *CreateShortLink) Call(
 	}
 
 	return link, nil
+}
+
+func (u *CreateShortLink) getTrackUntilDate(link model.Link) *time.Time {
+	if link.TrackUntil == nil {
+		return nil
+	}
+	maxTrackingDays := u.config.MaxTrackingDays()
+	now := time.Now()
+	maxTrackingDate := now.AddDate(0, 0, int(maxTrackingDays))
+	if link.TrackUntil.After(maxTrackingDate) {
+		return &maxTrackingDate
+	} else {
+		return link.TrackUntil
+	}
 }

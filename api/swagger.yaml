@@ -16,6 +16,14 @@ definitions:
                 minimum: 1
                 type: integer
                 x-go-name: MaxHits
+            track_until:
+                description: |-
+                    Data about link visits will be stored until this date.
+                    If not provided, the data will be not stored
+                example: "2021-01-01T00:00:00Z"
+                format: date-time
+                type: string
+                x-go-name: TrackUntil
             valid_until:
                 description: Valid until in iso8601 format. If not provided, the link will be valid forever
                 example: "2021-01-01T00:00:00Z"
@@ -103,6 +111,32 @@ definitions:
             - original_link
             - token
             - hits
+            - created_at
+        type: object
+        x-go-package: gotiny/internal/api/dto
+    VisitDto:
+        properties:
+            created_at:
+                description: The time when the visit was created
+                format: date-time
+                type: string
+                x-go-name: CreatedAt
+            id:
+                description: The id of the visit
+                type: string
+                x-go-name: Id
+            ip_addr:
+                description: Ip address of the visitor
+                type: string
+                x-go-name: IpAddress
+            user_agent:
+                description: User agent of the visitor
+                type: string
+                x-go-name: UserAgent
+        required:
+            - id
+            - ip_addr
+            - user_agent
             - created_at
         type: object
         x-go-package: gotiny/internal/api/dto
@@ -201,6 +235,10 @@ paths:
                   name: token
                   type: string
                   x-go-name: Token
+                - in: query
+                  name: page
+                  type: string
+                  x-go-name: Page
             responses:
                 "200":
                     $ref: '#/responses/getLinkDetailsResponse'
@@ -213,6 +251,24 @@ paths:
                 "500":
                     $ref: '#/responses/errorResponse'
             summary: Get link details
+            tags:
+                - link
+    /api/v1/link/{linkId}/visits:
+        get:
+            description: '# Get paginated list of visits for a link'
+            operationId: getVisits
+            responses:
+                "200":
+                    $ref: '#/responses/getLinkDetailsResponse'
+                "400":
+                    $ref: '#/responses/errorResponse'
+                "401":
+                    $ref: '#/responses/errorResponse'
+                "404":
+                    $ref: '#/responses/errorResponse'
+                "500":
+                    $ref: '#/responses/errorResponse'
+            summary: Get link visits
             tags:
                 - link
 produces:
@@ -232,4 +288,7 @@ responses:
         description: ""
         schema:
             $ref: '#/definitions/LinkDto'
+            items:
+                $ref: '#/definitions/VisitDto'
+            type: array
 swagger: "2.0"

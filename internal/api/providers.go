@@ -22,12 +22,17 @@ func Providers() []interface{} {
 			fx.As(new(RouteHandler)),
 		),
 		fx.Annotate(
-			handler.NewGetLinkDetails,
+			handler.NewGetLinkDetailsHandler,
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
 		fx.Annotate(
 			handler.NewDeleteLinkHandler,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
+		fx.Annotate(
+			handler.NewGetVisitsHandler,
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
