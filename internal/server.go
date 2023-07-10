@@ -13,6 +13,7 @@ import (
 
 	"gotiny/internal/api"
 	"gotiny/internal/api/handler"
+	app_middleware "gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core"
 	"gotiny/internal/core/usecase"
@@ -91,7 +92,13 @@ func newMux(
 		r.Method(http.MethodGet, "/swagger.yaml", http.FileServer(http.Dir("./")))
 
 		for _, h := range handlers {
-			r.Method(h.Method(), h.Path(), h)
+			r.Group(func(r chi.Router) {
+				middlewares := app_middleware.GetMiddlewaresToAttach(h)
+				for _, m := range middlewares {
+					r.Use(m.Handle)
+				}
+				r.Method(h.Method(), h.Path(), h)
+			})
 		}
 	})
 

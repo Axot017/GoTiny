@@ -3,9 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"gotiny/internal/api/dto"
+	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
@@ -39,28 +38,22 @@ type getLinkDetailsResponse struct {
 //	404: errorResponse
 //	500: errorResponse
 type GetLinkDetails struct {
-	createShortLink *usecase.GetLinkDetails
+	getLinkDetails     *usecase.GetLinkDetails
+	linkTokenValidator *middleware.LinkTokenValidator
 }
 
-func NewGetLinkDetailsHandler(createShortLink *usecase.GetLinkDetails) *GetLinkDetails {
+func NewGetLinkDetailsHandler(
+	createShortLink *usecase.GetLinkDetails,
+	linkTokenValidator *middleware.LinkTokenValidator,
+) *GetLinkDetails {
 	return &GetLinkDetails{
-		createShortLink: createShortLink,
+		getLinkDetails:     createShortLink,
+		linkTokenValidator: linkTokenValidator,
 	}
 }
 
 func (h *GetLinkDetails) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	id := chi.URLParam(request, "linkId")
-	token := request.URL.Query().Get("token")
-	link, err := h.createShortLink.Call(request.Context(), id, token)
-	if err != nil {
-		util.WriteError(writer, err)
-		return
-	}
-
-	if link == nil {
-		util.WriteError(writer, model.NewNotFoundError())
-		return
-	}
+	link := request.Context().Value("link").(*model.Link)
 	dto := dto.LinkDtoFromModel(*link)
 
 	util.WriteResponseJson(writer, dto)
@@ -72,4 +65,10 @@ func (h *GetLinkDetails) Path() string {
 
 func (h *GetLinkDetails) Method() string {
 	return http.MethodGet
+}
+
+func (h *GetLinkDetails) Middlewares() []middleware.AppMiddleware {
+	return []middleware.AppMiddleware{
+		h.linkTokenValidator,
+	}
 }

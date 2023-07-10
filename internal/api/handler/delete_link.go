@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
+	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
+	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
 
@@ -31,19 +31,23 @@ type deleteLinkParams struct {
 //	404: errorResponse
 //	500: errorResponse
 type DeleteLinkHandler struct {
-	deleteLink *usecase.DeleteLink
+	deleteLink         *usecase.DeleteLink
+	linkTokenValidator *middleware.LinkTokenValidator
 }
 
-func NewDeleteLinkHandler(deleteLink *usecase.DeleteLink) *DeleteLinkHandler {
+func NewDeleteLinkHandler(
+	deleteLink *usecase.DeleteLink,
+	linkTokenValidator *middleware.LinkTokenValidator,
+) *DeleteLinkHandler {
 	return &DeleteLinkHandler{
-		deleteLink: deleteLink,
+		deleteLink:         deleteLink,
+		linkTokenValidator: linkTokenValidator,
 	}
 }
 
 func (h *DeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	id := chi.URLParam(request, "linkId")
-	token := request.URL.Query().Get("token")
-	err := h.deleteLink.Call(request.Context(), id, token)
+	link := request.Context().Value("link").(*model.Link)
+	err := h.deleteLink.Call(request.Context(), link.Id)
 	if err != nil {
 		util.WriteError(writer, err)
 		return
@@ -58,4 +62,10 @@ func (h *DeleteLinkHandler) Path() string {
 
 func (h *DeleteLinkHandler) Method() string {
 	return http.MethodDelete
+}
+
+func (h *DeleteLinkHandler) Middlewares() []middleware.AppMiddleware {
+	return []middleware.AppMiddleware{
+		h.linkTokenValidator,
+	}
 }

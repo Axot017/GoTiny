@@ -2,15 +2,11 @@ package usecase
 
 import (
 	"context"
-
-	"gotiny/internal/core/model"
 )
 
 type DeleteLinkError string
 
 type DeleteLinkRepository interface {
-	GetLinkById(ctx context.Context, id string) (*model.Link, error)
-
 	DeleteLinkById(ctx context.Context, id string) error
 }
 
@@ -24,26 +20,6 @@ func NewDeleteLink(repository DeleteLinkRepository) *DeleteLink {
 	}
 }
 
-func (u *DeleteLink) Call(ctx context.Context, id string, token string) error {
-	link, err := u.repository.GetLinkById(ctx, id)
-	if err != nil {
-		return &model.AppError{
-			Type:    string(model.UnknownError),
-			Context: err,
-		}
-	}
-
-	if link == nil {
-		return &model.AppError{
-			Type: string(model.NotFoundError),
-		}
-	}
-
-	if link.Token != token {
-		return &model.AppError{
-			Type: string(model.UnauthorizedError),
-		}
-	}
-
+func (u *DeleteLink) Call(ctx context.Context, id string) error {
 	return u.repository.DeleteLinkById(ctx, id)
 }
