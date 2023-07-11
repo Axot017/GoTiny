@@ -22,11 +22,11 @@ or check out the [API docs](https://dev.goti.one/api/docs) and [SwaggerUI](https
 ## Get Started
 
 ### Requirements
-* Go 1.20+ ([https://go.dev/doc/install](https://go.dev/doc/install))
-* AWS CLI ([https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html] (https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html))
-* Terraform ([https://developer.hashicorp.com/terraform/downloads](https://developer.hashicorp.com/terraform/downloads))
-* Docker ([https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/))
-* goswagger ([https://goswagger.io/install.html](https://goswagger.io/install.html))
+* Go 1.20+ (https://go.dev/doc/install)
+* AWS CLI (https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+* Terraform (https://developer.hashicorp.com/terraform/downloads)
+* Docker (https://www.docker.com/products/docker-desktop/)
+* goswagger (https://goswagger.io/install.html)
 
 ### Run locally
 You can run app directly with go:
