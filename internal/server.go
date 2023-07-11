@@ -12,7 +12,6 @@ import (
 	"go.uber.org/fx"
 
 	"gotiny/internal/api"
-	"gotiny/internal/api/handler"
 	app_middleware "gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core"
@@ -62,7 +61,6 @@ func startServer(lc fx.Lifecycle, server *http.Server) {
 
 func newMux(
 	handlers []api.RouteHandler,
-	redirect_hander *handler.RedirectHandler,
 	logger *util.StructuredLogger,
 ) *chi.Mux {
 	mux := chi.NewRouter()
@@ -86,23 +84,19 @@ func newMux(
 	mux.Use(middleware.RequestID)
 	mux.Use(middleware.Recoverer)
 
-	mux.Route("/api", func(r chi.Router) {
-		r.Method(http.MethodGet, "/docs", redoc)
-		r.Method(http.MethodGet, "/swagger-ui", swaggerUI)
-		r.Method(http.MethodGet, "/swagger.yaml", http.FileServer(http.Dir("./")))
+	mux.Method(http.MethodGet, "/api/docs", redoc)
+	mux.Method(http.MethodGet, "/api/swagger-ui", swaggerUI)
+	mux.Method(http.MethodGet, "/api/swagger.yaml", http.FileServer(http.Dir("./")))
 
-		for _, h := range handlers {
-			r.Group(func(r chi.Router) {
-				middlewares := app_middleware.GetMiddlewaresToAttach(h)
-				for _, m := range middlewares {
-					r.Use(m.Handle)
-				}
-				r.Method(h.Method(), h.Path(), h)
-			})
-		}
-	})
-
-	mux.Method(redirect_hander.Method(), redirect_hander.Path(), redirect_hander)
+	for _, h := range handlers {
+		mux.Group(func(r chi.Router) {
+			middlewares := app_middleware.GetMiddlewaresToAttach(h)
+			for _, m := range middlewares {
+				r.Use(m)
+			}
+			r.Method(h.Method(), h.Path(), h)
+		})
+	}
 
 	return mux
 }

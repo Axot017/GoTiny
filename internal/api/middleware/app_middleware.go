@@ -7,12 +7,12 @@ type AppMiddleware interface {
 }
 
 type WithMiddlewares interface {
-	Middlewares() []AppMiddleware
+	Middlewares() []func(http.Handler) http.Handler
 }
 
-func GetMiddlewaresToAttach(handler interface{}) []AppMiddleware {
+func GetMiddlewaresToAttach(handler interface{}) []func(http.Handler) http.Handler {
 	if h, ok := handler.(WithMiddlewares); ok {
 		return h.Middlewares()
 	}
-	return []AppMiddleware{}
+	return []func(http.Handler) http.Handler{}
 }
