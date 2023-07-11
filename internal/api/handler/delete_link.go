@@ -57,15 +57,15 @@ func (h *DeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 }
 
 func (h *DeleteLinkHandler) Path() string {
-	return "/v1/link/{linkId:[a-zA-Z0-9]{1,}}"
+	return "/api/v1/link/{linkId:[a-zA-Z0-9]{1,}}"
 }
 
 func (h *DeleteLinkHandler) Method() string {
 	return http.MethodDelete
 }
 
-func (h *DeleteLinkHandler) Middlewares() []middleware.AppMiddleware {
-	return []middleware.AppMiddleware{
-		h.linkTokenValidator,
+func (h *DeleteLinkHandler) Middlewares() []func(http.Handler) http.Handler {
+	return []func(http.Handler) http.Handler{
+		h.linkTokenValidator.Handle,
 	}
 }

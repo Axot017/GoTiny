@@ -60,15 +60,15 @@ func (h *GetLinkDetails) ServeHTTP(writer http.ResponseWriter, request *http.Req
 }
 
 func (h *GetLinkDetails) Path() string {
-	return "/v1/link/{linkId:[a-zA-Z0-9]{1,}}"
+	return "/api/v1/link/{linkId:[a-zA-Z0-9]{1,}}"
 }
 
 func (h *GetLinkDetails) Method() string {
 	return http.MethodGet
 }
 
-func (h *GetLinkDetails) Middlewares() []middleware.AppMiddleware {
-	return []middleware.AppMiddleware{
-		h.linkTokenValidator,
+func (h *GetLinkDetails) Middlewares() []func(http.Handler) http.Handler {
+	return []func(http.Handler) http.Handler{
+		h.linkTokenValidator.Handle,
 	}
 }

@@ -70,7 +70,7 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 }
 
 func (h *CreateLinkHandler) Path() string {
-	return "/v1/link"
+	return "/api/v1/link"
 }
 
 func (h *CreateLinkHandler) Method() string {

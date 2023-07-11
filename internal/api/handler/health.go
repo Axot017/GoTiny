@@ -22,7 +22,7 @@ func (h *HealthHandler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 }
 
 func (h *HealthHandler) Path() string {
-	return "/health"
+	return "/api/health"
 }
 
 func (h *HealthHandler) Method() string {

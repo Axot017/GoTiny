@@ -73,15 +73,15 @@ func (h *GetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *http.R
 }
 
 func (h *GetVisitsHandler) Path() string {
-	return "/v1/link/{linkId}/visits"
+	return "/api/v1/link/{linkId}/visits"
 }
 
 func (h *GetVisitsHandler) Method() string {
 	return http.MethodGet
 }
 
-func (h *GetVisitsHandler) Middlewares() []middleware.AppMiddleware {
-	return []middleware.AppMiddleware{
-		h.linkTokenValidator,
+func (h *GetVisitsHandler) Middlewares() []func(http.Handler) http.Handler {
+	return []func(http.Handler) http.Handler{
+		h.linkTokenValidator.Handle,
 	}
 }

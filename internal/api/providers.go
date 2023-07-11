@@ -37,7 +37,16 @@ func Providers() []interface{} {
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
-		handler.NewRedirectHandler,
+		fx.Annotate(
+			handler.NewHomePageHandler,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
+		fx.Annotate(
+			handler.NewRedirectHandler,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
 		middleware.NewLinkTokenValidator,
 		util.NewStructuredLogger,
 	}
