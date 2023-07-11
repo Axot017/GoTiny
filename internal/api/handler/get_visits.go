@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
-
 	"gotiny/internal/api/dto"
+	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
+	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
 
@@ -27,7 +27,8 @@ type getVisitsResponse struct {
 }
 
 type GetVisitsHandler struct {
-	getVisits *usecase.GetLinkVisits
+	getVisits          *usecase.GetLinkVisits
+	linkTokenValidator *middleware.LinkTokenValidator
 }
 
 // swagger:route GET /api/v1/link/{linkId}/visits link getVisits
@@ -43,19 +44,25 @@ type GetVisitsHandler struct {
 //	401: errorResponse
 //	404: errorResponse
 //	500: errorResponse
-func NewGetVisitsHandler(getVisits *usecase.GetLinkVisits) *GetVisitsHandler {
-	return &GetVisitsHandler{getVisits: getVisits}
+func NewGetVisitsHandler(
+	getVisits *usecase.GetLinkVisits,
+	linkTokenValidator *middleware.LinkTokenValidator,
+) *GetVisitsHandler {
+	return &GetVisitsHandler{
+		getVisits:          getVisits,
+		linkTokenValidator: linkTokenValidator,
+	}
 }
 
 func (h *GetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	id := chi.URLParam(request, "linkId")
+	link := request.Context().Value("link").(*model.Link)
 	pageToken := request.URL.Query().Get("pageToken")
 	var pagePtr *string
 	if pageToken != "" {
 		pagePtr = &pageToken
 	}
 
-	visits, err := h.getVisits.Call(request.Context(), id, pagePtr)
+	visits, err := h.getVisits.Call(request.Context(), link.Id, pagePtr)
 	if err != nil {
 		util.WriteError(writer, err)
 		return
@@ -71,4 +78,10 @@ func (h *GetVisitsHandler) Path() string {
 
 func (h *GetVisitsHandler) Method() string {
 	return http.MethodGet
+}
+
+func (h *GetVisitsHandler) Middlewares() []middleware.AppMiddleware {
+	return []middleware.AppMiddleware{
+		h.linkTokenValidator,
+	}
 }

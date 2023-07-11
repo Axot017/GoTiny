@@ -23,6 +23,7 @@ type CreateLinkDto struct {
 
 	// Data about link visits will be stored until this date.
 	// If not provided, the data will be not stored
+	//
 	// example: 2021-01-01T00:00:00Z
 	// required: false
 	TrackUntil *time.Time `json:"track_until" validate:"omitempty"`
