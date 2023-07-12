@@ -1,6 +1,6 @@
 # GoTiny: A Link Shortener App
 
-GoTiny is a web app that lets you create short and custom URLs from long ones. 
+GoTiny is a web app that lets you create short URLs from long ones. 
 You can set a TTL or a visit limit for your links and track their clicks. 
 GoTiny is open source and free to use. Please star or contribute to the project on GitHub if you like it.
 
@@ -18,6 +18,7 @@ or check out the [API docs](https://dev.goti.one/api/docs) and [SwaggerUI](https
     * [Backend](#backend)
     * [Frontend](#frontend)
     * [Infrastructure](#infrastructure)
+4. [Architecture](#architecture)
 
 ## Get Started
 
@@ -50,7 +51,7 @@ or with make:
 
 ### Backend
 
-The backend is written in Go, a fast and reliable programming language that is well suited for web development. The backend does not use many external packages, as the goal was to keep the code simple and maintainable. The backend relies mostly on the standard library features and functions. The backend uses the following libraries:
+The backend is designed in Go, a fast and reliable programming language ideal for web development. Because the intention was to keep the code basic and maintainable, the backend does not use many external packages. The backend is primarily dependent on standard library features and functions. The following libraries are used by the backend:
 - chi router: A lightweight and idiomatic HTTP router that follows the standard library patterns and interfaces.
 - fx: A dependency injection framework that simplifies the wiring and configuration of components and services.
 - slog: A structured and leveled logging library that supports multiple output formats and contexts.
@@ -64,7 +65,7 @@ TODO
 
 ### Infrastructure
 
-The project is hosted on AWS, a secure and scalable cloud platform that offers a variety of services and features. The project also uses Terraform, an open-source tool that enables writing infrastructure as code. Terraform allows creating and managing the infrastructure resources in a declarative and consistent way. The project uses the following AWS services:
+The project is hosted on Amazon Web Services (AWS), a secure and scalable cloud platform with a wide range of services and capabilities. Terraform, an open-source tool for writing infrastructure as code, is also used in the project. Terraform enables the declarative and consistent creation and management of infrastructure resources. The following AWS services are used in the project:
 - App Runner: A fully managed service that makes it easy to deploy and run containerized web applications at scale.
 - DynamoDB: A fast and flexible NoSQL database that provides consistent and low-latency performance.
 - Route 53: A reliable and cost-effective DNS service that routes traffic to the best endpoint for the application.
@@ -72,7 +73,7 @@ The project is hosted on AWS, a secure and scalable cloud platform that offers a
 
 ## Architecture
 
-The project follows the hexagonal architecture, a design pattern that aims to create loosely coupled and testable components. The project consists of three main parts:
+The project follows to hexagonal architecture, a design pattern that aims to create loosely coupled and testable components. The project is divided into three major sections:
 * Core: The core contains the models and the business logic of the application. The core has no dependency on other parts, it only defines interfaces that the data part satisfies.
 * Data: The data part handles the connection to the database and third-party services. The data part implements the interfaces defined by the core and provides the data access and manipulation functions.
 * API: The API part contains the handlers for different routes. The API part receives the requests from the clients and calls the appropriate functions from the core part. The API part also returns the responses to the clients in a suitable format.
