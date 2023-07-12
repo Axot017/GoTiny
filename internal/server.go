@@ -87,6 +87,7 @@ func newMux(
 	mux.Method(http.MethodGet, "/api/docs", redoc)
 	mux.Method(http.MethodGet, "/api/swagger-ui", swaggerUI)
 	mux.Method(http.MethodGet, "/api/swagger.yaml", http.FileServer(http.Dir("./")))
+	mux.Method(http.MethodGet, "/public/*", http.FileServer(http.Dir("./web/")))
 
 	for _, h := range handlers {
 		mux.Group(func(r chi.Router) {
