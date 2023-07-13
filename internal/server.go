@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"fmt"
+	"html/template"
 	"net"
 	"net/http"
 
@@ -38,6 +39,7 @@ func StartServer() {
 		fx.Provide(api.Providers()...),
 		fx.Provide(data.Providers()...),
 		fx.Provide(core.Providers()...),
+		fx.Provide(loadTemplates),
 		fx.Invoke(startServer),
 	).Run()
 }
@@ -109,4 +111,8 @@ func newServer(mux *chi.Mux) *http.Server {
 	}
 
 	return &server
+}
+
+func loadTemplates() (*template.Template, error) {
+	return template.ParseGlob("web/templates/*")
 }

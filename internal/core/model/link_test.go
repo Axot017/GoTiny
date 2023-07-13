@@ -15,7 +15,6 @@ func TestNewFromIndex(t *testing.T) {
 
 	config := LinkConfig{
 		ValidUntil: &validUntil,
-		Host:       "localhost:8080",
 		MaxHits:    &maxHits,
 	}
 

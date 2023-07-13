@@ -5,19 +5,21 @@ import (
 	"net/http"
 )
 
-type HomePageHandler struct{}
+type HomePageHandler struct {
+	template *template.Template
+}
 
-func NewHomePageHandler() *HomePageHandler {
-	return &HomePageHandler{}
+func NewHomePageHandler(
+	template *template.Template,
+) *HomePageHandler {
+	return &HomePageHandler{
+		template: template,
+	}
 }
 
 func (h *HomePageHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	temp, err := template.ParseGlob("web/templates/*")
-	if err != nil {
-		panic(err)
-	}
 	writer.WriteHeader(http.StatusOK)
-	temp.ExecuteTemplate(writer, "home.html", nil)
+	h.template.ExecuteTemplate(writer, "home.html", nil)
 }
 
 func (h *HomePageHandler) Path() string {
