@@ -12,3 +12,6 @@ dev_outputs:
 
 spec:
 	swagger generate spec -o ./api/swagger.yaml --scan-models
+
+css:
+	npx tailwindcss -i input.css -o web/public/styles.css

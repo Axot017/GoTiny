@@ -1,11 +1,23 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Hi</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-  </head>
-  <body>
-    Hello World!
-  </body>
+
+<head>
+  <title>Hi</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link rel="stylesheet" href="/public/styles.css" />
+  <script defer src="/public/htmx.min.js"></script>
+  <script defer src="/public/json-enc.js"></script>
+</head>
+
+<body>
+  <form hx-post="/ajax/link" hx-target="#target" hx-indicator="#loader" hx-ext='json-enc'>
+    <input type="text" name="link" />
+    <input type="submit" value="Submit" />
+  </form>
+  <div id="loader" class="htmx-indicator">Loading</div>
+  <div id="target"></div>
+
+</body>
+
 </html>
