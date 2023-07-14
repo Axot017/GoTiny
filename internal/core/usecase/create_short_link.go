@@ -43,10 +43,9 @@ func NewCreateShortLink(
 
 func (u *CreateShortLink) Call(
 	ctx context.Context,
-	url string,
-	link_config model.LinkConfig,
+	linkToCreate model.LinkToCreate,
 ) (model.Link, error) {
-	isValid, err := u.urlChecker.CheckUrl(ctx, url)
+	isValid, err := u.urlChecker.CheckUrl(ctx, linkToCreate.Url)
 
 	if err == nil && !isValid {
 		return model.Link{}, &model.AppError{
@@ -62,7 +61,7 @@ func (u *CreateShortLink) Call(
 		}
 	}
 
-	link := model.NewFromIndex(index, url, link_config, u.config.BaseUrl())
+	link := model.NewFromIndex(index, linkToCreate, u.config.BaseUrl())
 	link.TrackUntil = u.getTrackUntilDate(link)
 
 	err = u.repository.SaveLink(ctx, link)

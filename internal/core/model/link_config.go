@@ -2,7 +2,8 @@ package model
 
 import "time"
 
-type LinkConfig struct {
+type LinkToCreate struct {
+	Url        string
 	ValidUntil *time.Time
 	MaxHits    *uint
 	TrackUntil *time.Time
