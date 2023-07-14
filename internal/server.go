@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	openapi "github.com/go-openapi/runtime/middleware"
+	"github.com/go-playground/form/v4"
 	"go.uber.org/fx"
 
 	"gotiny/internal/api"
@@ -35,11 +36,12 @@ func StartServer() {
 				newMux,
 				fx.ParamTags(`group:"routes"`),
 			),
+			loadTemplates,
+			form.NewDecoder,
 		),
 		fx.Provide(api.Providers()...),
 		fx.Provide(data.Providers()...),
 		fx.Provide(core.Providers()...),
-		fx.Provide(loadTemplates),
 		fx.Invoke(startServer),
 	).Run()
 }

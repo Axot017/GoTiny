@@ -20,7 +20,7 @@ type Link struct {
 	CreatedAt    time.Time
 }
 
-func NewFromIndex(index uint, url string, config LinkConfig, baseUrl string) Link {
+func NewFromIndex(index uint, linkToCreate LinkToCreate, baseUrl string) Link {
 	id := util.EncodeBase62(index)
 	shortLink := baseUrl + "/" + id
 	now := time.Now()
@@ -29,11 +29,11 @@ func NewFromIndex(index uint, url string, config LinkConfig, baseUrl string) Lin
 		Id:           id,
 		ShortLink:    shortLink,
 		Token:        util.RandString(tokenLength),
-		OriginalLink: url,
+		OriginalLink: linkToCreate.Url,
 		CreatedAt:    now,
-		MaxHits:      config.MaxHits,
-		TrackUntil:   config.TrackUntil,
-		ValidUntil:   config.ValidUntil,
+		MaxHits:      linkToCreate.MaxHits,
+		TrackUntil:   linkToCreate.TrackUntil,
+		ValidUntil:   linkToCreate.ValidUntil,
 	}
 }
 

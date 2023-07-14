@@ -13,12 +13,13 @@ func TestNewFromIndex(t *testing.T) {
 	validUntil := time.Now().Add(time.Minute * 60)
 	maxHits := uint(10)
 
-	config := LinkConfig{
+	config := LinkToCreate{
 		ValidUntil: &validUntil,
 		MaxHits:    &maxHits,
+		Url:        url,
 	}
 
-	link := NewFromIndex(index, url, config, "http://localhost:8080")
+	link := NewFromIndex(index, config, "http://localhost:8080")
 
 	assert.Equal(t, "a", link.Id)
 	assert.Equal(t, "http://localhost:8080/a", link.ShortLink)
