@@ -56,7 +56,7 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 		return
 	}
 
-	h.template.ExecuteTemplate(writer, "link_details.html", link)
+	h.template.ExecuteTemplate(writer, "link_list_item.html", link)
 }
 
 func (h *AjaxCreateLinkHandler) Path() string {

@@ -7,7 +7,6 @@ import (
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
-	"gotiny/internal/core/usecase"
 )
 
 // swagger:parameters getLinkDetails
@@ -38,16 +37,13 @@ type getLinkDetailsResponse struct {
 //	404: errorResponse
 //	500: errorResponse
 type GetLinkDetails struct {
-	getLinkDetails     *usecase.GetLinkDetails
 	linkTokenValidator *middleware.LinkTokenValidator
 }
 
 func NewGetLinkDetailsHandler(
-	createShortLink *usecase.GetLinkDetails,
 	linkTokenValidator *middleware.LinkTokenValidator,
 ) *GetLinkDetails {
 	return &GetLinkDetails{
-		getLinkDetails:     createShortLink,
 		linkTokenValidator: linkTokenValidator,
 	}
 }

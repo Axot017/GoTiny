@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Hi</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link rel="stylesheet" href="/public/styles.css" />
+  <script src="/public/htmx.min.js"></script>
+  <script src="/public/remove-me.js"></script>
+  <script src="/public/loading-states.js"></script>
+  <script src="/public/format-dates.js"></script>
+</head>
+
+<body>
+  <button hx-delete="/link/{{ .Id }}?token={{ .Token }}">Delete</button>
+  <div hx-trigger="load" hx-target="this" hx-get="/link/{{ .Id }}/visits?token={{ .Token }}" hx-swap="outerHTML">
+    Loading...
+  </div>
+</body>
+
+</html>
