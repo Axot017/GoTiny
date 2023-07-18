@@ -9,6 +9,7 @@ resource "aws_apprunner_service" "app" {
           "BASE_URL"             = "https://${var.app_base_url}",
           "LOG_JSON"             = "true",
           "LINKS_DYNAMODB_TABLE" = aws_dynamodb_table.links.name,
+          "IP_STACK_TOKEN"       = var.ip_stack_token
         }
       }
       image_identifier      = "${aws_ecr_repository.gotidy.repository_url}:latest"

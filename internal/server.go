@@ -16,21 +16,20 @@ import (
 	"gotiny/internal/api"
 	app_middleware "gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
+	"gotiny/internal/config"
 	"gotiny/internal/core"
-	"gotiny/internal/core/usecase"
+	"gotiny/internal/core/port"
 	"gotiny/internal/data"
-	"gotiny/internal/data/adapter"
 )
 
 func StartServer() {
 	fx.New(
 		fx.Provide(
 			newServer,
+			config.NewConfig,
 			fx.Annotate(
-				NewConfig,
-				fx.As(new(usecase.CreateShortLinkConfig)),
-				fx.As(new(core.LoggingConfig)),
-				fx.As(new(adapter.DynamodbConfig)),
+				config.NewConfig,
+				fx.As(new(port.Config)),
 			),
 			fx.Annotate(
 				newMux,

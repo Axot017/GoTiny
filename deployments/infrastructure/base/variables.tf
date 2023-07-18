@@ -18,3 +18,7 @@ variable "app_name" {
 variable "app_base_url" {
   type = string
 }
+
+variable "ip_stack_token" {
+  type = string
+}

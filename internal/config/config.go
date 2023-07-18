@@ -1,4 +1,4 @@
-package internal
+package config
 
 import (
 	"os"
@@ -9,7 +9,10 @@ type Config struct {
 	baseUrl         string
 	logJson         bool
 	linksTableName  string
+	ipTableName     string
 	maxTrackingDays uint
+	ipStackBaseUrl  string
+	ipStackToken    string
 }
 
 func NewConfig() *Config {
@@ -22,16 +25,29 @@ func NewConfig() *Config {
 	if linksTableName == "" {
 		linksTableName = "links-go-tiny-dev"
 	}
+	ipTableName := os.Getenv("IP_DYNAMODB_TABLE")
+	if ipTableName == "" {
+		ipTableName = linksTableName
+	}
+
 	maxTrackingDaysStr := os.Getenv("MAX_TRACKING_DAYS")
 	maxTrackingDays, err := strconv.Atoi(maxTrackingDaysStr)
 	if err != nil {
 		maxTrackingDays = 30
 	}
+	ipStackBaseUrl := os.Getenv("IP_STACK_BASE_URL")
+	if ipStackBaseUrl == "" {
+		ipStackBaseUrl = "http://api.ipstack.com"
+	}
+	ipStackToken := os.Getenv("IP_STACK_TOKEN")
 
 	return &Config{
 		baseUrl:         baseUrl,
 		logJson:         logJson,
 		linksTableName:  linksTableName,
+		ipTableName:     ipTableName,
+		ipStackBaseUrl:  ipStackBaseUrl,
+		ipStackToken:    ipStackToken,
 		maxTrackingDays: uint(maxTrackingDays),
 	}
 }
@@ -50,4 +66,16 @@ func (c *Config) LinksTableName() string {
 
 func (c *Config) MaxTrackingDays() uint {
 	return c.maxTrackingDays
+}
+
+func (c *Config) IpTableName() string {
+	return c.ipTableName
+}
+
+func (c *Config) IpStackBaseUrl() string {
+	return c.ipStackBaseUrl
+}
+
+func (c *Config) IpStackToken() string {
+	return c.ipStackToken
 }

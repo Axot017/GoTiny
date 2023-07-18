@@ -5,38 +5,23 @@ import (
 	"time"
 
 	"gotiny/internal/core/model"
+	"gotiny/internal/core/port"
 )
 
 const (
 	InvalidUrlError = "invalid_url"
 )
 
-type CreateShortLinkConfig interface {
-	BaseUrl() string
-
-	MaxTrackingDays() uint
-}
-
-type UrlChecker interface {
-	CheckUrl(ctx context.Context, url string) (bool, error)
-}
-
-type CreateShortLinkRepository interface {
-	GetNextLinkIndex(ctx context.Context) (uint, error)
-
-	SaveLink(ctx context.Context, link model.Link) error
-}
-
 type CreateShortLink struct {
-	repository CreateShortLinkRepository
-	config     CreateShortLinkConfig
-	urlChecker UrlChecker
+	repository port.LinksRepository
+	config     port.Config
+	urlChecker port.LinkChecker
 }
 
 func NewCreateShortLink(
-	repository CreateShortLinkRepository,
-	config CreateShortLinkConfig,
-	urlChecker UrlChecker,
+	repository port.LinksRepository,
+	config port.Config,
+	urlChecker port.LinkChecker,
 ) *CreateShortLink {
 	return &CreateShortLink{repository, config, urlChecker}
 }
