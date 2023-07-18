@@ -3,7 +3,7 @@ package data
 import (
 	"go.uber.org/fx"
 
-	"gotiny/internal/core/usecase"
+	"gotiny/internal/core/port"
 	"gotiny/internal/data/adapter"
 )
 
@@ -11,15 +11,19 @@ func Providers() []interface{} {
 	return []interface{}{
 		fx.Annotate(
 			adapter.NewDynamodbLinksRepository,
-			fx.As(new(usecase.CreateShortLinkRepository)),
-			fx.As(new(usecase.HitLinkRepository)),
-			fx.As(new(usecase.GetLinkDetailsRepository)),
-			fx.As(new(usecase.DeleteLinkRepository)),
-			fx.As(new(usecase.GetLinkVisitsRepository)),
+			fx.As(new(port.LinksRepository)),
+		),
+		fx.Annotate(
+			adapter.NewDynamodIpRepository,
+			fx.As(new(port.IpCacheRepository)),
+		),
+		fx.Annotate(
+			adapter.NewIpStackApiClient,
+			fx.As(new(port.IpRepository)),
 		),
 		fx.Annotate(
 			adapter.NewHttpClient,
-			fx.As(new(usecase.UrlChecker)),
+			fx.As(new(port.LinkChecker)),
 		),
 		newAwsConfig,
 		newDynamobdClient,

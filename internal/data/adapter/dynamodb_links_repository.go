@@ -11,6 +11,7 @@ import (
 	"github.com/segmentio/ksuid"
 	"golang.org/x/exp/slog"
 
+	"gotiny/internal/config"
 	"gotiny/internal/core/model"
 	core_util "gotiny/internal/core/util"
 	"gotiny/internal/data/dto"
@@ -24,18 +25,14 @@ const (
 	pageLimit          = 30
 )
 
-type DynamodbConfig interface {
-	LinksTableName() string
-}
-
 type DynamodbLinksRepository struct {
 	client *dynamodb.Client
-	config DynamodbConfig
+	config *config.Config
 }
 
 func NewDynamodbLinksRepository(
 	client *dynamodb.Client,
-	cfg DynamodbConfig,
+	cfg *config.Config,
 ) (*DynamodbLinksRepository, error) {
 	r := DynamodbLinksRepository{client: client, config: cfg}
 	err := r.init()
@@ -185,18 +182,19 @@ func (r *DynamodbLinksRepository) init() error {
 	return nil
 }
 
-func (r *DynamodbLinksRepository) SaveRedirectRequestData(
+func (r *DynamodbLinksRepository) SaveHitAnalitics(
 	ctx context.Context,
 	linkId string,
-	requestData model.RedirecsRequestData,
+	requestData model.LinkHitAnalitics,
 ) error {
-	dto := dto.LinkVisitDto{
-		PK:        dto.LinkVisitPKPrefix + linkId,
-		SK:        dto.LinkVisitSKPrefix + ksuid.New().String(),
-		Ip:        requestData.Ip,
-		UserAgent: requestData.UserAgent,
-		CreatedAt: time.Now(),
-		TTL:       new(uint),
+	dto := dto.LinkHitAnaliticsDto{
+		PK:          dto.LinkVisitPKPrefix + linkId,
+		SK:          dto.LinkVisitSKPrefix + ksuid.New().String(),
+		IpDetails:   requestData.IpDetails,
+		RequestData: requestData.RequestData,
+		CreatedAt:   time.Now(),
+		// TODO: Set ttl
+		// TTL: ,
 	}
 	avs, err := attributevalue.MarshalMap(dto)
 	if err != nil {
@@ -221,11 +219,11 @@ func (r *DynamodbLinksRepository) GetLinkVisits(
 	ctx context.Context,
 	linkId string,
 	page *string,
-) (model.PagedResponse[model.LinkVisit], error) {
+) (model.PagedResponse[model.LinkHitAnalitics], error) {
 	lastEvaluatedKey, err := util.DecodePrimaryPageToken(page)
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
-		return model.PagedResponse[model.LinkVisit]{}, err
+		return model.PagedResponse[model.LinkHitAnalitics]{}, err
 	}
 	result, err := r.client.Query(ctx, &dynamodb.QueryInput{
 		TableName:              aws.String(r.config.LinksTableName()),
@@ -240,25 +238,25 @@ func (r *DynamodbLinksRepository) GetLinkVisits(
 	})
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error getting link visits", "err", err)
-		return model.PagedResponse[model.LinkVisit]{}, err
+		return model.PagedResponse[model.LinkHitAnalitics]{}, err
 	}
 
-	var visits []dto.LinkVisitDto
+	var visits []dto.LinkHitAnaliticsDto
 	err = attributevalue.UnmarshalListOfMaps(result.Items, &visits)
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error unmarshalling link visits", "err", err)
-		return model.PagedResponse[model.LinkVisit]{}, err
+		return model.PagedResponse[model.LinkHitAnalitics]{}, err
 	}
 	pageToken, err := util.EncodePrimaryPageToken(result.LastEvaluatedKey)
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
-		return model.PagedResponse[model.LinkVisit]{}, err
+		return model.PagedResponse[model.LinkHitAnalitics]{}, err
 	}
 
-	return model.PagedResponse[model.LinkVisit]{
-		Items: core_util.MapSlice[dto.LinkVisitDto, model.LinkVisit](
+	return model.PagedResponse[model.LinkHitAnalitics]{
+		Items: core_util.MapSlice[dto.LinkHitAnaliticsDto, model.LinkHitAnalitics](
 			visits,
-			dto.LinkVisitDtoToModel,
+			dto.LinkHitAnaliticsDtoToDomain,
 		),
 		PageToken: pageToken,
 	}, nil

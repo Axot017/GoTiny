@@ -4,17 +4,14 @@ import (
 	"context"
 
 	"gotiny/internal/core/model"
+	"gotiny/internal/core/port"
 )
 
-type GetLinkDetailsRepository interface {
-	GetLinkById(ctx context.Context, id string) (*model.Link, error)
-}
-
 type GetLinkDetails struct {
-	repository GetLinkDetailsRepository
+	repository port.LinksRepository
 }
 
-func NewGetLinkDetails(repository GetLinkDetailsRepository) *GetLinkDetails {
+func NewGetLinkDetails(repository port.LinksRepository) *GetLinkDetails {
 	return &GetLinkDetails{
 		repository: repository,
 	}

@@ -2,19 +2,15 @@ package usecase
 
 import (
 	"context"
+
+	"gotiny/internal/core/port"
 )
 
-type DeleteLinkError string
-
-type DeleteLinkRepository interface {
-	DeleteLinkById(ctx context.Context, id string) error
-}
-
 type DeleteLink struct {
-	repository DeleteLinkRepository
+	repository port.LinksRepository
 }
 
-func NewDeleteLink(repository DeleteLinkRepository) *DeleteLink {
+func NewDeleteLink(repository port.LinksRepository) *DeleteLink {
 	return &DeleteLink{
 		repository: repository,
 	}

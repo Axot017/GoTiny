@@ -4,13 +4,11 @@ import (
 	"os"
 
 	"golang.org/x/exp/slog"
+
+	"gotiny/internal/core/port"
 )
 
-type LoggingConfig interface {
-	LogJson() bool
-}
-
-func NewSlogHandler(config LoggingConfig) slog.Handler {
+func NewSlogHandler(config port.Config) slog.Handler {
 	opitons := slog.HandlerOptions{}
 	var handler slog.Handler
 

@@ -5,29 +5,24 @@ import (
 	"time"
 
 	"gotiny/internal/core/model"
+	"gotiny/internal/core/port"
 )
 
-type HitLinkRepository interface {
-	GetLinkById(ctx context.Context, id string) (*model.Link, error)
-
-	DeleteLinkById(ctx context.Context, id string) error
-
-	IncrementHitCount(ctx context.Context, id string) error
-
-	SaveRedirectRequestData(
-		ctx context.Context,
-		linkId string,
-		requestData model.RedirecsRequestData,
-	) error
-}
-
 type HitLink struct {
-	repository HitLinkRepository
+	repository        port.LinksRepository
+	ipRepository      port.IpRepository
+	ipCacheRepository port.IpCacheRepository
 }
 
-func NewHitLink(repository HitLinkRepository) *HitLink {
+func NewHitLink(
+	repository port.LinksRepository,
+	ipRepository port.IpRepository,
+	ipCacheRepository port.IpCacheRepository,
+) *HitLink {
 	return &HitLink{
-		repository: repository,
+		repository:        repository,
+		ipRepository:      ipRepository,
+		ipCacheRepository: ipCacheRepository,
 	}
 }
 
@@ -48,7 +43,7 @@ func (u *HitLink) Call(
 		return nil, nil
 	}
 
-	go u.saveRequestData(link, requestData)
+	go u.saveAnalitics(link, requestData)
 
 	if !link.Valid() {
 		go u.repository.DeleteLinkById(context.Background(), id)
@@ -60,7 +55,7 @@ func (u *HitLink) Call(
 	return &link.OriginalLink, nil
 }
 
-func (u *HitLink) saveRequestData(link *model.Link, requestData model.RedirecsRequestData) {
+func (u *HitLink) saveAnalitics(link *model.Link, requestData model.RedirecsRequestData) {
 	if link.TrackUntil == nil {
 		return
 	}
@@ -68,6 +63,30 @@ func (u *HitLink) saveRequestData(link *model.Link, requestData model.RedirecsRe
 	if link.TrackUntil.Before(time.Now()) {
 		return
 	}
+	ipDetails := u.getIpDetails(requestData.Ip)
 
-	u.repository.SaveRedirectRequestData(context.Background(), link.Id, requestData)
+	u.repository.SaveHitAnalitics(context.Background(), link.Id, model.LinkHitAnalitics{
+		IpDetails:   ipDetails,
+		RequestData: requestData,
+	})
+}
+
+func (u *HitLink) getIpDetails(ip string) *model.IpDetails {
+	ipDetails, err := u.ipCacheRepository.GetIpDetails(context.Background(), ip)
+	if err != nil {
+		return nil
+	}
+
+	if ipDetails != nil {
+		return ipDetails
+	}
+
+	newDetails, err := u.ipRepository.GetIpDetails(context.Background(), ip)
+	if err != nil {
+		return nil
+	}
+
+	go u.ipCacheRepository.SaveIpDetails(context.Background(), newDetails)
+
+	return ipDetails
 }
