@@ -24,6 +24,10 @@ type VisitDto struct {
 	//
 	// required: false
 	Type *string `json:"ip_type"`
+	// The country flag svg image of the visitor
+	//
+	// required: false
+	CountryFlagSvgImage *string `json:"country_flag_svg_image"`
 	// The country code of the visitor
 	//
 	// required: false
@@ -68,17 +72,18 @@ func VisitDtoFromModel(visit model.LinkHitAnalitics) VisitDto {
 		}
 	}
 	return VisitDto{
-		Id:          visit.Id,
-		IpAddress:   visit.RequestData.Ip,
-		UserAgent:   visit.RequestData.UserAgent,
-		Type:        &visit.IpDetails.Type,
-		CountryCode: &visit.IpDetails.CountryCode,
-		Country:     &visit.IpDetails.Country,
-		Region:      &visit.IpDetails.Region,
-		City:        &visit.IpDetails.City,
-		Zip:         &visit.IpDetails.Zip,
-		Latitude:    &visit.IpDetails.Latitude,
-		Longitude:   &visit.IpDetails.Longitude,
-		CreatedAt:   visit.CreatedAt,
+		Id:                  visit.Id,
+		IpAddress:           visit.RequestData.Ip,
+		UserAgent:           visit.RequestData.UserAgent,
+		Type:                &visit.IpDetails.Type,
+		CountryFlagSvgImage: &visit.IpDetails.CountryFlagSvgImage,
+		CountryCode:         &visit.IpDetails.CountryCode,
+		Country:             &visit.IpDetails.Country,
+		Region:              &visit.IpDetails.Region,
+		City:                &visit.IpDetails.City,
+		Zip:                 &visit.IpDetails.Zip,
+		Latitude:            &visit.IpDetails.Latitude,
+		Longitude:           &visit.IpDetails.Longitude,
+		CreatedAt:           visit.CreatedAt,
 	}
 }

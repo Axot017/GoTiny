@@ -73,7 +73,7 @@ func (u *HitLink) saveAnalitics(link *model.Link, requestData model.RedirecsRequ
 
 func (u *HitLink) getIpDetails(ip string) *model.IpDetails {
 	ipDetails, err := u.ipCacheRepository.GetIpDetails(context.Background(), ip)
-	if err != nil {
+	if err != nil || ipDetails.Ip == "" {
 		return nil
 	}
 
@@ -88,5 +88,5 @@ func (u *HitLink) getIpDetails(ip string) *model.IpDetails {
 
 	go u.ipCacheRepository.SaveIpDetails(context.Background(), newDetails)
 
-	return ipDetails
+	return &newDetails
 }
