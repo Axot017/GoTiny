@@ -8,29 +8,31 @@ const (
 )
 
 type IpDetailsDto struct {
-	PK          string
-	SK          string
-	Type        string
-	CountryCode string
-	Country     string
-	Region      string
-	City        string
-	Zip         string
-	Latitude    float64
-	Longitude   float64
+	PK                  string
+	SK                  string
+	Type                string
+	CountryFlagSvgImage string
+	CountryCode         string
+	Country             string
+	Region              string
+	City                string
+	Zip                 string
+	Latitude            float64
+	Longitude           float64
 }
 
 func (r *IpDetailsDto) ToIpDetails() model.IpDetails {
 	return model.IpDetails{
-		Ip:          r.SK[len(IpSKPrefix):],
-		Type:        r.Type,
-		CountryCode: r.CountryCode,
-		Country:     r.Country,
-		Region:      r.Region,
-		City:        r.City,
-		Zip:         r.Zip,
-		Latitude:    r.Latitude,
-		Longitude:   r.Longitude,
+		Ip:                  r.SK[len(IpSKPrefix):],
+		Type:                r.Type,
+		CountryFlagSvgImage: r.CountryFlagSvgImage,
+		CountryCode:         r.CountryCode,
+		Country:             r.Country,
+		Region:              r.Region,
+		City:                r.City,
+		Zip:                 r.Zip,
+		Latitude:            r.Latitude,
+		Longitude:           r.Longitude,
 	}
 }
 

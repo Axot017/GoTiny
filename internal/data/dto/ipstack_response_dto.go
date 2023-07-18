@@ -73,14 +73,15 @@ type SecurityDto struct {
 
 func (r *IpStackResponseDto) ToIpDetails() model.IpDetails {
 	return model.IpDetails{
-		Ip:          r.Ip,
-		Type:        r.Type,
-		CountryCode: r.CountryCode,
-		Country:     r.CountryName,
-		Region:      r.RegionName,
-		City:        r.City,
-		Zip:         r.Zip,
-		Latitude:    r.Latitude,
-		Longitude:   r.Longitude,
+		Ip:                  r.Ip,
+		Type:                r.Type,
+		CountryFlagSvgImage: r.Location.CountryFlag,
+		CountryCode:         r.CountryCode,
+		Country:             r.CountryName,
+		Region:              r.RegionName,
+		City:                r.City,
+		Zip:                 r.Zip,
+		Latitude:            r.Latitude,
+		Longitude:           r.Longitude,
 	}
 }
