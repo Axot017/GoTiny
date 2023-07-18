@@ -13,7 +13,7 @@
 </head>
 
 <body>
-  <form hx-post="/ajax/link" hx-target="#target" hx-indicator="#loader" hx-ext="format-dates">
+  <form hx-post="/ajax/link" hx-target="#target" hx-indicator="#loader" hx-ext="format-dates" hx-swap="afterbegin">
     <input type="text" name="link" />
     <input type="checkbox" id="enable_valid_until" onclick="this.form.valid_until.disabled=!this.checked" />
     <input disabled format-date type="datetime-local" name="valid_until" id="valid_until" />

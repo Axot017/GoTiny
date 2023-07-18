@@ -116,5 +116,9 @@ func newServer(mux *chi.Mux) *http.Server {
 }
 
 func loadTemplates() (*template.Template, error) {
-	return template.ParseGlob("web/templates/*")
+	t := template.Must(template.ParseGlob("web/templates/*.html"))
+	t = template.Must(t.ParseGlob("web/templates/elements/*.html"))
+	t = t.Funcs(util.TemplatesFunctions)
+
+	return t, nil
 }

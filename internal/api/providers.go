@@ -38,7 +38,7 @@ func Providers() []interface{} {
 			fx.As(new(RouteHandler)),
 		),
 		fx.Annotate(
-			handler.NewHomePageHandler,
+			handler.NewAjaxHomePageHandler,
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
@@ -49,6 +49,21 @@ func Providers() []interface{} {
 		),
 		fx.Annotate(
 			handler.NewAjaxCreateLinkHandler,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
+		fx.Annotate(
+			handler.NewAjaxLinkDetailsPageHandler,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
+		fx.Annotate(
+			handler.NewAjaxDeleteLinkHandler,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
+		fx.Annotate(
+			handler.NewAjaxGetVisitsHandler,
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
