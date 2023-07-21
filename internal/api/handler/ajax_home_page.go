@@ -3,6 +3,8 @@ package handler
 import (
 	"html/template"
 	"net/http"
+
+	"gotiny/internal/api/util"
 )
 
 type AjaxHomePageHandler struct {
@@ -19,7 +21,7 @@ func NewAjaxHomePageHandler(
 
 func (h *AjaxHomePageHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	writer.WriteHeader(http.StatusOK)
-	h.template.ExecuteTemplate(writer, "home_page.html", nil)
+	util.WriteTemplate(request, writer, h.template, "home_page.html", nil)
 }
 
 func (h *AjaxHomePageHandler) Path() string {
