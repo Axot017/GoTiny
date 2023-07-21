@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
 	"gotiny/internal/api/middleware"
+	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
@@ -38,12 +38,17 @@ func (h *AjaxGetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *ht
 
 	visits, err := h.getVisits.Call(request.Context(), link.Id, pagePtr)
 	if err != nil {
+		util.WriteTemplate(
+			request,
+			writer,
+			h.template,
+			"retry_error.html",
+			map[string]interface{}{},
+		)
 		return
 	}
 
-	fmt.Println(visits)
-
-	h.template.ExecuteTemplate(writer, "link_visits_list.html", map[string]interface{}{
+	util.WriteTemplate(request, writer, h.template, "link_visits_list.html", map[string]interface{}{
 		"Page": visits,
 		"Link": link,
 	})

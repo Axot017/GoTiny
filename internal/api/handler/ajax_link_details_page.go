@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"gotiny/internal/api/middleware"
+	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
 )
 
@@ -25,7 +26,7 @@ func NewAjaxLinkDetailsPageHandler(
 
 func (h *AjaxLinkDetailsPageHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	link := request.Context().Value("link").(*model.Link)
-	h.template.ExecuteTemplate(writer, "link_details_page.html", link)
+	util.WriteTemplate(request, writer, h.template, "link_details_page.html", link)
 }
 
 func (h *AjaxLinkDetailsPageHandler) Path() string {

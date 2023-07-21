@@ -41,7 +41,7 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 		h.formDecoder,
 	)
 	if err != nil {
-		h.template.ExecuteTemplate(writer, "timed_error.html", nil)
+		util.WriteTemplate(request, writer, h.template, "timed_error.html", err.Error())
 		return
 	}
 	config := model.LinkToCreate{
@@ -52,11 +52,11 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 	}
 	link, err := h.createShortLink.Call(request.Context(), config)
 	if err != nil {
-		h.template.ExecuteTemplate(writer, "timed_error.html", err.Error())
+		util.WriteTemplate(request, writer, h.template, "timed_error.html", err.Error())
 		return
 	}
 
-	h.template.ExecuteTemplate(writer, "link_list_item.html", link)
+	util.WriteTemplate(request, writer, h.template, "link_list_item.html", link)
 }
 
 func (h *AjaxCreateLinkHandler) Path() string {
