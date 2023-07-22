@@ -7,10 +7,14 @@
   <meta name="keywords" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/public/styles.css" />
+  <link rel="stylesheet" href="/public/toastify.min.css" />
   <script src="/public/htmx.min.js"></script>
-  <script src="/public/remove-me.js"></script>
+  <script src="/public/toastify.min.js"></script>
+  <script src="/public/toastify.js"></script>
+  <script src="/public/sweetalert2.min.js"></script>
   <script src="/public/loading-states.js"></script>
   <script src="/public/format-dates.js"></script>
+  <script defer src="/public/base.js"></script>
 </head>
 
 <body class="w-screen">
@@ -20,7 +24,7 @@
     <div class="aspect-[16/6] w-screen flex content-center items-center justify-center flex-shrink-0">
       <form hx-post="/ajax/link" class="w-full flex justify-center" hx-target="#target" hx-indicator="#loader"
         hx-ext="format-dates" hx-swap="afterbegin">
-        <div class="backdrop-blur rounded-full bg-neutral-800/40 flex w-1/2 px-2 py-2">
+        <div class="backdrop-blur rounded-full bg-neutral-800/40 flex w-1/2 px-2 py-2 items-center">
           <input class="appearance-none font-semibold placeholder:text-slate-100/70 bg-transparent
               border-none text-slate-100 mr-3 py-1 px-4 leading-tight focus:outline-none text-lg flex-1"
             placeholder="Put link here" type="url" name="link" />
@@ -37,43 +41,7 @@
 
       <div class="aspect-16/6">
       </div>
-      <div id="target" class="p-4 sm:p-8 bg-slate-900">
-        dsfadf asdf
-        <br />
-        asdfasdfasdfasdfasdfasdfas
-        <br />
-        divsdafasdfasdfasdfas
-        <br />
-        format-datesdfasdfa
-        <br />
-        sdf
-        <br />
-        asdfasdfasdfasdfasdfasdfasdfasdsfasdfasdfasdfasdfasdfasdfasdf
-
-        <br />
-        format-datesdfasdfaasdfa
-        <br />
-        sfda
-        <br />
-        sdfasdf
-        <br />
-        asdfasdfasdfasdfasdfasdfasfda
-        <br />
-        sfdasdf
-        <br />
-        asdfasdfasdfasdfasdfasdfasfdaasdf
-        <br />
-        asdfasdfasdfasdfasdfasdfasfdafda
-        <br />
-        sdfasfd
-        <br />
-        asdfasdfasdfasdfasdfasdfasfdaasdfasdf
-        <br />
-
-        asdfasdfasdfasdfasdfasdfasfdaasdfasdfdf
-        <br />
-        asdf
-      </div>
+      <div id="target" class="bg-slate-900"></div>
     </div>
   </div>
 </body>

@@ -600,6 +600,10 @@ html {
           appearance: none;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .content-center {
   align-content: center;
 }
@@ -675,6 +679,16 @@ html {
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .text-lg {
@@ -757,6 +771,16 @@ select:-webkit-autofill:focus {
 
 .placeholder\:text-slate-100\/70::placeholder {
   color: rgb(241 245 249 / 0.7);
+}
+
+.odd\:bg-slate-900:nth-child(odd) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+}
+
+.even\:bg-slate-950:nth-child(even) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 6 23 / var(--tw-bg-opacity));
 }
 
 .hover\:scale-110:hover {

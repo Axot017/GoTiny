@@ -1,5 +1,17 @@
-<div hx-boost="true">
-  <a href="/link/{{ .Id }}?token={{ .Token }}">
-    {{ .ShortLink }}
+<div hx-boost="true" class="even:bg-slate-950 odd:bg-slate-900 w-screen flex-row flex px-6 py-4 items-center">
+  <div>
+    <div>
+      {{ .ShortLink }}
+    </div>
+    <div>
+      {{ .OriginalLink }}
+    </div>
+  </div>
+  <div class="flex-1"></div>
+  <a href="/link/{{ .Id }}?token={{ .Token }}" class="px-2">
+    Details
   </a>
+  <button onclick="navigator.clipboard.writeText('{{ .ShortLink }}'); showInfo('Copied!')">
+    Copy
+  </button>
 </div>
