@@ -2,12 +2,12 @@
 <html>
 
 <head>
-  <title>Hi</title>
+  <title>GoTiny</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/public/styles.css" />
   <link rel="stylesheet" href="/public/toastify.min.css" />
+  <link rel="stylesheet" href="/public/styles.css" />
   <script src="/public/htmx.min.js"></script>
   <script src="/public/toastify.min.js"></script>
   <script src="/public/toastify.js"></script>
@@ -23,11 +23,11 @@
     style="background-image:url('/public/images/bg.webp');">
     <div class="aspect-[16/6] w-screen flex content-center items-center justify-center flex-shrink-0">
       <form hx-post="/ajax/link" class="w-full flex justify-center" hx-target="#target" hx-indicator="#loader"
-        hx-ext="format-dates" hx-swap="afterbegin">
+        hx-ext="format-dates" hx-swap="beforeend">
         <div class="backdrop-blur rounded-full bg-neutral-800/40 flex w-1/2 px-2 py-2 items-center">
           <input class="appearance-none font-semibold placeholder:text-slate-100/70 bg-transparent
               border-none text-slate-100 mr-3 py-1 px-4 leading-tight focus:outline-none text-lg flex-1"
-            placeholder="Put link here" type="url" name="link" />
+            placeholder="Put link here" type="text" name="link" />
           <div id="loader" class="htmx-indicator flex-shrink-0">
             {{template "loader_small" .}}
           </div>
@@ -41,7 +41,7 @@
 
       <div class="aspect-16/6">
       </div>
-      <div id="target" class="bg-slate-900"></div>
+      <div id="target" class="bg-slate-900 flex flex-col-reverse"></div>
     </div>
   </div>
 </body>
