@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"gotiny/internal/api/middleware"
+	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
@@ -25,7 +26,11 @@ func NewAjaxDeleteLinkHandler(
 
 func (h *AjaxDeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	link := request.Context().Value("link").(*model.Link)
-	_ = h.deleteLink.Call(request.Context(), link.Id)
+	err := h.deleteLink.Call(request.Context(), link.Id)
+	if err != nil {
+		util.WriteAjaxError(writer, err)
+		return
+	}
 
 	writer.Header().Set("HX-Redirect", "/")
 }

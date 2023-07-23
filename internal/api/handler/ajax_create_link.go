@@ -41,8 +41,7 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 		h.formDecoder,
 	)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte("Invalid link"))
+		util.WriteAjaxError(writer, err)
 		return
 	}
 	config := model.LinkToCreate{
@@ -53,8 +52,7 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 	}
 	link, err := h.createShortLink.Call(request.Context(), config)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		writer.Write([]byte("Failed to create link"))
+		util.WriteAjaxError(writer, err)
 		return
 	}
 

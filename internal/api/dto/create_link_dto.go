@@ -9,7 +9,7 @@ type CreateLinkDto struct {
 	// required: true
 	// example: https://google.com
 	// format: url
-	Link string `json:"link"        form:"link"        validate:"required,url"`
+	Link string `json:"link"        form:"link"        validate:"required"`
 	// Valid until in iso8601 format. If not provided, the link will be valid forever
 	//
 	// example: 2021-01-01T00:00:00Z

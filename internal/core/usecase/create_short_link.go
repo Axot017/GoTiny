@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"net/url"
+	"strings"
 	"time"
 
 	"gotiny/internal/core/model"
@@ -30,9 +32,12 @@ func (u *CreateShortLink) Call(
 	ctx context.Context,
 	linkToCreate model.LinkToCreate,
 ) (model.Link, error) {
-	isValid, err := u.urlChecker.CheckUrl(ctx, linkToCreate.Url)
+	if !strings.HasPrefix(linkToCreate.Url, "http") {
+		linkToCreate.Url = "https://" + linkToCreate.Url
+	}
+	isValid := u.isValidUrl(ctx, linkToCreate.Url)
 
-	if err == nil && !isValid {
+	if !isValid {
 		return model.Link{}, &model.AppError{
 			Type: InvalidUrlError,
 		}
@@ -58,6 +63,19 @@ func (u *CreateShortLink) Call(
 	}
 
 	return link, nil
+}
+
+func (u *CreateShortLink) isValidUrl(ctx context.Context, link string) bool {
+	_, err := url.ParseRequestURI(link)
+	if err != nil {
+		return false
+	}
+
+	isValid, err := u.urlChecker.CheckUrl(ctx, link)
+	if err != nil {
+		return false
+	}
+	return isValid
 }
 
 func (u *CreateShortLink) getTrackUntilDate(link model.Link) *time.Time {
