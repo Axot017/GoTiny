@@ -1,5 +1,19 @@
-<div hx-boost="true">
-  <a href="/link/{{ .Id }}?token={{ .Token }}">
-    {{ .ShortLink }}
+<div hx-boost="true" class="odd:bg-slate-950 even:bg-slate-900 w-screen flex-row flex
+  px-6 py-4 items-center transition-all duration-200">
+  <div onclick="navigator.clipboard.writeText('{{ .ShortLink }}'); showInfo('Copied!')">
+    <div class="text-xl">
+      {{ .ShortLink }}
+    </div>
+    <div class="text-sm text-slate-100/60 pt-1">
+      {{ .OriginalLink }}
+    </div>
+  </div>
+  <div class="flex-1"></div>
+  <button onclick="navigator.clipboard.writeText('{{ .ShortLink }}'); showInfo('Copied!')" class="cursor-pointer bg-transparent font-bold 
+              rounded-full hover:scale-110 transition duration-200 ease-in-out mr-3 px-2 py-2">
+    Copy
+  </button>
+  <a href="/link/{{ .Id }}?token={{ .Token }}" class="bg-slate-600 px-5 py-2 hover:bg-slate-700 rounded-full">
+    Details
   </a>
 </div>
