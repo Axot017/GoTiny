@@ -7,4 +7,5 @@ type LinkToCreate struct {
 	ValidUntil *time.Time
 	MaxHits    *uint
 	TrackUntil *time.Time
+	UserId     *string
 }

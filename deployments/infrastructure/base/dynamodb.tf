@@ -39,6 +39,16 @@ resource "aws_dynamodb_table" "links" {
     type = "N"
   }
 
+  attribute {
+    name = "GSI_1_PK"
+    type = "S"
+  }
+
+  attribute {
+    name = "GSI_1_SK"
+    type = "S"
+  }
+
   local_secondary_index {
     name            = "LSI_1"
     range_key       = "LSI_1"
@@ -66,6 +76,13 @@ resource "aws_dynamodb_table" "links" {
   local_secondary_index {
     name            = "LSI_5"
     range_key       = "LSI_5"
+    projection_type = "ALL"
+  }
+
+  global_secondary_index {
+    name            = "GSI_1"
+    hash_key        = "GSI_1_PK"
+    range_key       = "GSI_1_SK"
     projection_type = "ALL"
   }
 

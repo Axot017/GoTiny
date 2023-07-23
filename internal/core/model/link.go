@@ -15,6 +15,7 @@ type Link struct {
 	Token        string
 	Hits         uint
 	MaxHits      *uint
+	UserId       *string
 	ValidUntil   *time.Time
 	TrackUntil   *time.Time
 	CreatedAt    time.Time
@@ -31,6 +32,7 @@ func NewFromIndex(index uint, linkToCreate LinkToCreate, baseUrl string) Link {
 		Token:        util.RandString(tokenLength),
 		OriginalLink: linkToCreate.Url,
 		CreatedAt:    now,
+		UserId:       linkToCreate.UserId,
 		MaxHits:      linkToCreate.MaxHits,
 		TrackUntil:   linkToCreate.TrackUntil,
 		ValidUntil:   linkToCreate.ValidUntil,
