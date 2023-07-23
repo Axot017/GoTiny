@@ -38,13 +38,7 @@ func (h *AjaxGetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *ht
 
 	visits, err := h.getVisits.Call(request.Context(), link.Id, pagePtr)
 	if err != nil {
-		util.WriteTemplate(
-			request,
-			writer,
-			h.template,
-			"retry_error.html",
-			map[string]interface{}{},
-		)
+		util.WriteAjaxError(writer, err)
 		return
 	}
 

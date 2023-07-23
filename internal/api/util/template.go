@@ -26,7 +26,6 @@ func WriteTemplate(
 	err := t.ExecuteTemplate(w, name, data)
 	if err != nil {
 		slog.ErrorCtx(r.Context(), "error while executing template", "err", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
+		WriteAjaxError(w, err)
 	}
 }
