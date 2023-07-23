@@ -23,7 +23,7 @@
     style="background-image:url('/public/images/bg.webp');">
     <div class="aspect-[16/6] w-screen flex content-center items-center justify-center flex-shrink-0">
       <form hx-post="/ajax/link" class="w-full flex justify-center" hx-target="#target" hx-indicator="#loader"
-        hx-ext="format-dates" hx-swap="beforeend">
+        hx-ext="format-dates" hx-swap="beforeend" hx-ext="loading-states">
         <div class="backdrop-blur rounded-full bg-neutral-800/40 flex w-1/2 px-2 py-2 items-center">
           <input class="appearance-none font-semibold placeholder:text-slate-100/70 bg-transparent
               border-none text-slate-100 mr-3 py-1 px-4 leading-tight focus:outline-none text-lg flex-1"
@@ -32,7 +32,7 @@
             {{template "loader_small" .}}
           </div>
           <input type="submit" value="Shorten URL"
-            class="cursor-pointer bg-transparent font-bold text-lg 
+            class="cursor-pointer bg-transparent font-bold text-lg data-loading-disable
               text-fuchsia-200 py-2 px-4 rounded-full hover:scale-110 transition duration-300 ease-in-out flex-shrink-0" />
         </div>
       </form>

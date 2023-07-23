@@ -68,6 +68,7 @@ func Providers() []interface{} {
 			fx.As(new(RouteHandler)),
 		),
 		middleware.NewLinkTokenValidator,
+		middleware.NewIdCookieMiddleware,
 		util.NewStructuredLogger,
 	}
 }

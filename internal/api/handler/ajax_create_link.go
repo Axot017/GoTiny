@@ -8,16 +8,18 @@ import (
 	"github.com/go-playground/validator/v10"
 
 	"gotiny/internal/api/dto"
+	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
 	"gotiny/internal/core/usecase"
 )
 
 type AjaxCreateLinkHandler struct {
-	createShortLink *usecase.CreateShortLink
-	validate        *validator.Validate
-	template        *template.Template
-	formDecoder     *form.Decoder
+	createShortLink    *usecase.CreateShortLink
+	validate           *validator.Validate
+	template           *template.Template
+	formDecoder        *form.Decoder
+	idCookieMiddleware *middleware.IdCookieMiddleware
 }
 
 func NewAjaxCreateLinkHandler(
@@ -25,12 +27,14 @@ func NewAjaxCreateLinkHandler(
 	validate *validator.Validate,
 	template *template.Template,
 	formDecoder *form.Decoder,
+	idCookieMiddleware *middleware.IdCookieMiddleware,
 ) *AjaxCreateLinkHandler {
 	return &AjaxCreateLinkHandler{
 		createShortLink,
 		validate,
 		template,
 		formDecoder,
+		idCookieMiddleware,
 	}
 }
 
@@ -49,6 +53,7 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 		MaxHits:    create_link_dto.MaxHits,
 		ValidUntil: create_link_dto.ValidUntil,
 		TrackUntil: create_link_dto.TrackUntil,
+		UserId:     request.Context().Value("user_id").(*string),
 	}
 	link, err := h.createShortLink.Call(request.Context(), config)
 	if err != nil {
@@ -65,4 +70,10 @@ func (h *AjaxCreateLinkHandler) Path() string {
 
 func (h *AjaxCreateLinkHandler) Method() string {
 	return http.MethodPost
+}
+
+func (h *AjaxCreateLinkHandler) Middlewares() []func(http.Handler) http.Handler {
+	return []func(http.Handler) http.Handler{
+		h.idCookieMiddleware.Handle,
+	}
 }
