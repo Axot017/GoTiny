@@ -13,8 +13,8 @@
 </head>
 
 <body>
-  <button hx-delete="/link/{{ .Id }}?token={{ .Token }}">Delete</button>
-  <div hx-trigger="load" hx-target="this" hx-get="/link/{{ .Id }}/visits?token={{ .Token }}" hx-swap="outerHTML">
+  <button hx-delete="/ajax/link/{{ .Id }}?token={{ .Token }}">Delete</button>
+  <div hx-trigger="load" hx-target="this" hx-get="/ajax/link/{{ .Id }}/visits?token={{ .Token }}" hx-swap="outerHTML">
     Loading...
   </div>
 </body>

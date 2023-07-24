@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -104,13 +105,13 @@ func (r *DynamodbLinksRepository) GetLinkById(ctx context.Context, id string) (*
 	if result.Item == nil {
 		return nil, nil
 	}
-	var dto dto.LinkDto
-	err = attributevalue.UnmarshalMap(result.Item, &dto)
+	var d dto.LinkDto
+	err = attributevalue.UnmarshalMap(result.Item, &d)
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error unmarshalling link", "err", err)
 		return nil, err
 	}
-	link := dto.ToLink()
+	link := dto.LinkDtoToLink(d)
 
 	return &link, nil
 }
@@ -220,7 +221,7 @@ func (r *DynamodbLinksRepository) GetLinkVisits(
 	linkId string,
 	page *string,
 ) (model.PagedResponse[model.LinkHitAnalitics], error) {
-	lastEvaluatedKey, err := util.DecodePrimaryPageToken(page)
+	lastEvaluatedKey, err := util.DecodePageToken(page)
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
 		return model.PagedResponse[model.LinkHitAnalitics]{}, err
@@ -247,7 +248,7 @@ func (r *DynamodbLinksRepository) GetLinkVisits(
 		slog.ErrorCtx(ctx, "Error unmarshalling link visits", "err", err)
 		return model.PagedResponse[model.LinkHitAnalitics]{}, err
 	}
-	pageToken, err := util.EncodePrimaryPageToken(result.LastEvaluatedKey)
+	pageToken, err := util.EncodePageToken(result.LastEvaluatedKey)
 	if err != nil {
 		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
 		return model.PagedResponse[model.LinkHitAnalitics]{}, err
@@ -257,6 +258,54 @@ func (r *DynamodbLinksRepository) GetLinkVisits(
 		Items: core_util.MapSlice[dto.LinkHitAnaliticsDto, model.LinkHitAnalitics](
 			visits,
 			dto.LinkHitAnaliticsDtoToDomain,
+		),
+		PageToken: pageToken,
+	}, nil
+}
+
+func (r *DynamodbLinksRepository) GetUserLinks(
+	ctx context.Context,
+	userId string,
+	page *string,
+) (model.PagedResponse[model.Link], error) {
+	lastEvaluatedKey, err := util.DecodePageToken(page)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
+		return model.PagedResponse[model.Link]{}, err
+	}
+	result, err := r.client.Query(ctx, &dynamodb.QueryInput{
+		TableName:              aws.String(r.config.LinksTableName()),
+		IndexName:              aws.String("GSI_1"),
+		KeyConditionExpression: aws.String("GSI_1_PK = :pk AND begins_with(GSI_1_SK, :sk)"),
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":pk": &types.AttributeValueMemberS{Value: dto.LinkGSI1PKPrefix + userId},
+			":sk": &types.AttributeValueMemberS{Value: dto.LinkGSI1SKPrefix},
+		},
+		Limit:             aws.Int32(pageLimit),
+		ExclusiveStartKey: lastEvaluatedKey,
+		ScanIndexForward:  aws.Bool(false),
+	})
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error getting user links", "err", err)
+		return model.PagedResponse[model.Link]{}, err
+	}
+	var links []dto.LinkDto
+	err = attributevalue.UnmarshalListOfMaps(result.Items, &links)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error unmarshalling user links", "err", err)
+		return model.PagedResponse[model.Link]{}, err
+	}
+	fmt.Printf("LastEvaluatedKey: %v\n", result.LastEvaluatedKey)
+	pageToken, err := util.EncodePageToken(result.LastEvaluatedKey)
+	if err != nil {
+		slog.ErrorCtx(ctx, "Error decoding page token", "err", err)
+		return model.PagedResponse[model.Link]{}, err
+	}
+
+	return model.PagedResponse[model.Link]{
+		Items: core_util.MapSlice[dto.LinkDto, model.Link](
+			links,
+			dto.LinkDtoToLink,
 		),
 		PageToken: pageToken,
 	}, nil

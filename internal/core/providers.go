@@ -14,6 +14,7 @@ func Providers() []interface{} {
 		usecase.NewGetLinkDetails,
 		usecase.NewDeleteLink,
 		usecase.NewGetLinkVisits,
+		usecase.NewGetUserLinks,
 		fx.Annotate(NewSlogHandler, fx.As(new(slog.Handler))),
 	}
 }

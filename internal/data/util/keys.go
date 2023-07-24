@@ -19,16 +19,21 @@ func FormatKeys(PK string, SK string) map[string]types.AttributeValue {
 	}
 }
 
-type keys struct {
+type PrimaryKeys struct {
 	PK string
 	SK string
 }
 
-func EncodePrimaryPageToken(at map[string]types.AttributeValue) (*string, error) {
+type Gsi1Keys struct {
+	GSI_1_PK string
+	GSI_1_SK string
+}
+
+func EncodePageToken(at map[string]types.AttributeValue) (*string, error) {
 	if at == nil {
 		return nil, nil
 	}
-	var keys keys
+	var keys map[string]interface{}
 	err := attributevalue.UnmarshalMap(at, &keys)
 	if err != nil {
 		return nil, err
@@ -42,7 +47,7 @@ func EncodePrimaryPageToken(at map[string]types.AttributeValue) (*string, error)
 	return &encoded, nil
 }
 
-func DecodePrimaryPageToken(token *string) (map[string]types.AttributeValue, error) {
+func DecodePageToken(token *string) (map[string]types.AttributeValue, error) {
 	if token == nil {
 		return nil, nil
 	}
@@ -50,7 +55,7 @@ func DecodePrimaryPageToken(token *string) (map[string]types.AttributeValue, err
 	if err != nil {
 		return nil, err
 	}
-	var keys keys
+	var keys map[string]interface{}
 	err = json.Unmarshal(decoded, &keys)
 	if err != nil {
 		return nil, err

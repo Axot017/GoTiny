@@ -49,7 +49,7 @@ func (h *AjaxGetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *ht
 }
 
 func (h *AjaxGetVisitsHandler) Path() string {
-	return "/link/{linkId}/visits"
+	return "/ajax/link/{linkId}/visits"
 }
 
 func (h *AjaxGetVisitsHandler) Method() string {
