@@ -541,6 +541,14 @@ html {
   --tw-backdrop-sepia:  ;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
+.collapse {
+  visibility: collapse;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -560,6 +568,14 @@ html {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-0 {
+  height: 0px;
+}
+
+.max-h-0 {
+  max-height: 0px;
 }
 
 .min-h-screen {
@@ -622,6 +638,14 @@ html {
 
 .justify-center {
   justify-content: center;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-clip {
+  overflow: clip;
 }
 
 .overflow-x-hidden {

@@ -1,8 +1,12 @@
+<div></div>
+
 {{ range $i, $e := .Items }}
 
 {{template "link_list_item" $e}}
 
 {{end}}
+
+<div></div>
 
 
 {{ if .PageToken }}
