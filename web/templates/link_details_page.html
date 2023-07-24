@@ -43,9 +43,12 @@
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             Max Hits
           </th>
-          <td class="px-6 py-4">
+          <td class="px-6 py-4" id="valid-until">
             {{ .ValidUntil }}
           </td>
+          <script>
+            document.getElementById('valid-until').innerHTML = new Date('{{ .ValidUntil }}').toLocaleString();
+          </script>
         </tr>
         {{ end }}
         <tr class="even:bg-slate-900 odd:bg-slate-950">
@@ -60,14 +63,19 @@
           <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             Created At
           </th>
-          <td class="px-6 py-4">
+          <td class="px-6 py-4" id="created-at">
             {{ .CreatedAt }}
           </td>
+          <script>
+            document.getElementById('created-at').innerHTML = new Date('{{ .CreatedAt }}').toLocaleString();
+          </script>
         </tr>
         <tr class="even:bg-slate-900 odd:bg-slate-950">
           <td colspan="2" class="px-6 py-4 text-center">
-            <button hx-delete="/ajax/link/{{ .Id }}?token={{ .Token }}"
-              class="bg-slate-600 px-5 py-2 hover:bg-slate-700 rounded-full">Delete</button>
+            <button hx-trigger="confirmed" hx-delete="/ajax/link/{{ .Id }}?token={{ .Token }}"
+              class="bg-slate-600 px-5 py-2 hover:bg-slate-700 rounded-full" _="on click
+             call Swal.fire({title: 'Are you sure?', text:'This action cannot be undone', icon: 'warning', showCancelButton: true, confirmButtonText: 'Yes, delete it!'})
+             if result.isConfirmed trigger confirmed">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -77,9 +85,44 @@
   <div class="m-8 text-xl">
     Visits details:
   </div>
-  <div hx-trigger="load" hx-target="this" hx-get="/ajax/link/{{ .Id }}/visits?token={{ .Token }}" hx-swap="outerHTML">
-    {{ template "loader" }}
-  </div>
+
+  <table class="text-left w-screen">
+    <thead class="text-xs uppercase bg-gray-700 text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">
+          IP
+        </th>
+        <th scope="col" class="px-6 py-3">
+          User agent
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Lat
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Long
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Country
+        </th>
+        <th scope="col" class="px-6 py-3">
+          City
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Created At
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="even:bg-slate-900 odd:bg-slate-950" id="list-target">
+        <td colspan="7" class="px-6 py-4">
+          <div hx-trigger="load" hx-target="#list-target" hx-get="/ajax/link/{{ .Id }}/visits?token={{ .Token }}"
+            hx-swap="outerHTML">
+            {{ template "loader" }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   {{ end }}
 </body>
 
