@@ -8,6 +8,10 @@
   }
 }
 
+.aaaaa {
+  scrollbar-gutter: stable;
+}
+
 /* Change Autocomplete styles in Chrome*/
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

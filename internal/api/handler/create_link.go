@@ -54,10 +54,10 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	}
 
 	config := model.LinkToCreate{
-		Url:        create_link_dto.Link,
-		MaxHits:    create_link_dto.MaxHits,
-		ValidUntil: create_link_dto.ValidUntil,
-		TrackUntil: create_link_dto.TrackUntil,
+		Url:                     create_link_dto.Link,
+		MaxHits:                 create_link_dto.MaxHits,
+		ValidUntil:              create_link_dto.ValidUntil,
+		EnableDetailedAnalytics: create_link_dto.EnableDetailedAnalytics,
 	}
 	link, err := h.createShortLink.Call(request.Context(), config)
 	if err != nil {

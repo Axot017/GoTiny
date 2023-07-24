@@ -52,8 +52,9 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 		Url:        create_link_dto.Link,
 		MaxHits:    create_link_dto.MaxHits,
 		ValidUntil: create_link_dto.ValidUntil,
-		TrackUntil: create_link_dto.TrackUntil,
-		UserId:     request.Context().Value("user_id").(*string),
+		// EnableDetailedAnalytics: create_link_dto.EnableDetailedAnalytics,
+		EnableDetailedAnalytics: true,
+		UserId:                  request.Context().Value("user_id").(*string),
 	}
 	link, err := h.createShortLink.Call(request.Context(), config)
 	if err != nil {

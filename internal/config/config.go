@@ -2,17 +2,15 @@ package config
 
 import (
 	"os"
-	"strconv"
 )
 
 type Config struct {
-	baseUrl         string
-	logJson         bool
-	linksTableName  string
-	ipTableName     string
-	maxTrackingDays uint
-	ipStackBaseUrl  string
-	ipStackToken    string
+	baseUrl        string
+	logJson        bool
+	linksTableName string
+	ipTableName    string
+	ipStackBaseUrl string
+	ipStackToken   string
 }
 
 func NewConfig() *Config {
@@ -30,11 +28,6 @@ func NewConfig() *Config {
 		ipTableName = linksTableName
 	}
 
-	maxTrackingDaysStr := os.Getenv("MAX_TRACKING_DAYS")
-	maxTrackingDays, err := strconv.Atoi(maxTrackingDaysStr)
-	if err != nil {
-		maxTrackingDays = 30
-	}
 	ipStackBaseUrl := os.Getenv("IP_STACK_BASE_URL")
 	if ipStackBaseUrl == "" {
 		ipStackBaseUrl = "http://api.ipstack.com"
@@ -42,13 +35,12 @@ func NewConfig() *Config {
 	ipStackToken := os.Getenv("IP_STACK_TOKEN")
 
 	return &Config{
-		baseUrl:         baseUrl,
-		logJson:         logJson,
-		linksTableName:  linksTableName,
-		ipTableName:     ipTableName,
-		ipStackBaseUrl:  ipStackBaseUrl,
-		ipStackToken:    ipStackToken,
-		maxTrackingDays: uint(maxTrackingDays),
+		baseUrl:        baseUrl,
+		logJson:        logJson,
+		linksTableName: linksTableName,
+		ipTableName:    ipTableName,
+		ipStackBaseUrl: ipStackBaseUrl,
+		ipStackToken:   ipStackToken,
 	}
 }
 
@@ -62,10 +54,6 @@ func (c *Config) LogJson() bool {
 
 func (c *Config) LinksTableName() string {
 	return c.linksTableName
-}
-
-func (c *Config) MaxTrackingDays() uint {
-	return c.maxTrackingDays
 }
 
 func (c *Config) IpTableName() string {

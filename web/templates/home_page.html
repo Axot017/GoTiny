@@ -28,17 +28,15 @@
         </div>
       </form>
     </div>
-    <div class='flex-1'>
+    <div class="flex-1">
 
       <div class="aspect-16/6">
       </div>
       <div id="target" class="bg-slate-900 flex flex-col-reverse"></div>
       <div id="target" class="bg-slate-900 flex flex-col items-center">
-
         <div hx-get="/ajax/links" hx-trigger="revealed" hx-swap="outerHTML" hx-target="this">
           {{ template "loader" }}
         </div>
-
       </div>
     </div>
   </div>

@@ -1,10 +1,68 @@
-{{ range $i, $e := .Page.Items }}
+<table class="text-left w-screen">
+  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <tr>
+      <th scope="col" class="px-6 py-3">
+        IP
+      </th>
+      <th scope="col" class="px-6 py-3">
+        User agent
+      </th>
+      <th scope="col" class="px-6 py-3">
+        Lat
+      </th>
+      <th scope="col" class="px-6 py-3">
+        Long
+      </th>
+      <th scope="col" class="px-6 py-3">
+        Country
+      </th>
+      <th scope="col" class="px-6 py-3">
+        City
+      </th>
+      <th scope="col" class="px-6 py-3">
+        Created At
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{ range $i, $e := .Page.Items }}
+    <tr class="even:bg-slate-900 odd:bg-slate-950">
+      <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+        {{ $e.RequestData.Ip }}
+      </th>
+      <td class="px-6 py-4">
+        {{ $e.RequestData.UserAgent }}
+      </td>
+      <td class="px-6 py-4">
+        {{ if $e.IpDetails }}
+        {{ $e.IpDetails.Latitude }}
+        {{ end }}
+      </td>
+      <td class="px-6 py-4">
+        {{ if $e.IpDetails }}
+        {{ $e.IpDetails.Longitude }}
+        {{ end }}
+      </td>
+      <td class="px-6 py-4">
+        {{ if $e.IpDetails }}
+        {{ $e.IpDetails.Country }}
+        {{ end }}
+      </td>
+      <td class="px-6 py-4">
+        {{ if $e.IpDetails }}
+        {{ $e.IpDetails.City }}
+        {{ end }}
+      </td>
+      <td class="px-6 py-4">
+        {{ if $e.IpDetails }}
+        {{ $e.IpDetails.CreatedAt }}
+        {{ end }}
+      </td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
 
-<div>
-  {{ $e.UserAgent }}
-</div>
-
-{{end}}
 
 
 {{ if .Page.PageToken }}

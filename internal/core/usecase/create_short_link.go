@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/url"
 	"strings"
-	"time"
 
 	"gotiny/internal/core/model"
 	"gotiny/internal/core/port"
@@ -52,7 +51,6 @@ func (u *CreateShortLink) Call(
 	}
 
 	link := model.NewFromIndex(index, linkToCreate, u.config.BaseUrl())
-	link.TrackUntil = u.getTrackUntilDate(link)
 
 	err = u.repository.SaveLink(ctx, link)
 	if err != nil {
@@ -76,18 +74,4 @@ func (u *CreateShortLink) isValidUrl(ctx context.Context, link string) bool {
 		return false
 	}
 	return isValid
-}
-
-func (u *CreateShortLink) getTrackUntilDate(link model.Link) *time.Time {
-	if link.TrackUntil == nil {
-		return nil
-	}
-	maxTrackingDays := u.config.MaxTrackingDays()
-	now := time.Now()
-	maxTrackingDate := now.AddDate(0, 0, int(maxTrackingDays))
-	if link.TrackUntil.After(maxTrackingDate) {
-		return &maxTrackingDate
-	} else {
-		return link.TrackUntil
-	}
 }

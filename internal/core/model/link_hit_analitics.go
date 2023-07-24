@@ -4,7 +4,7 @@ import "time"
 
 type LinkHitAnalitics struct {
 	Id          string
-	RequestData RedirecsRequestData
+	RequestData RedirectRequestData
 	IpDetails   *IpDetails
 	CreatedAt   time.Time
 }

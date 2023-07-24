@@ -38,7 +38,7 @@ func NewRedirectHandler(hitLink *usecase.HitLink) *RedirectHandler {
 
 func (h *RedirectHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	id := chi.URLParam(request, "linkId")
-	requestData := model.RedirecsRequestData{
+	requestData := model.RedirectRequestData{
 		Ip:        request.RemoteAddr,
 		UserAgent: request.UserAgent(),
 	}

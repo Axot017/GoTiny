@@ -21,10 +21,7 @@ type CreateLinkDto struct {
 	// minimum: 1
 	MaxHits *uint `json:"max_hits"    form:"max_hits"    validate:"omitempty,gt=0"`
 
-	// Data about link visits will be stored until this date.
-	// If not provided, the data will be not stored
-	//
-	// example: 2021-01-01T00:00:00Z
-	// required: false
-	TrackUntil *time.Time `json:"track_until" form:"track_until" validate:"omitempty"`
+	// Enable detailed analytics
+	// example: true
+	EnableDetailedAnalytics bool `json:"enable_detailed_analytics" form:"enable_detailed_analytics" validate:"omitempty"`
 }

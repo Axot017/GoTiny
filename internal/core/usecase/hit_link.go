@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"time"
 
 	"gotiny/internal/core/model"
 	"gotiny/internal/core/port"
@@ -29,7 +28,7 @@ func NewHitLink(
 func (u *HitLink) Call(
 	ctx context.Context,
 	id string,
-	requestData model.RedirecsRequestData,
+	requestData model.RedirectRequestData,
 ) (*string, error) {
 	link, err := u.repository.GetLinkById(ctx, id)
 	if err != nil {
@@ -55,14 +54,11 @@ func (u *HitLink) Call(
 	return &link.OriginalLink, nil
 }
 
-func (u *HitLink) saveAnalitics(link *model.Link, requestData model.RedirecsRequestData) {
-	if link.TrackUntil == nil {
+func (u *HitLink) saveAnalitics(link *model.Link, requestData model.RedirectRequestData) {
+	if !link.EnableDetailedAnalytics {
 		return
 	}
 
-	if link.TrackUntil.Before(time.Now()) {
-		return
-	}
 	ipDetails := u.getIpDetails(requestData.Ip)
 
 	u.repository.SaveHitAnalitics(context.Background(), link.Id, model.LinkHitAnalitics{

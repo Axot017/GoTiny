@@ -46,23 +46,21 @@ type LinkDto struct {
 	// required: true
 	CreatedAt time.Time `json:"created_at"`
 
-	// Data about link visits will be stored until this date.
-	//
-	// example: 2021-01-01T00:00:00Z
-	// required: false
-	TrackUntil *time.Time `json:"track_until" validate:"omitempty"`
+	// Enable detailed analytics
+	// example: true
+	EnableDetailedAnalytics bool `json:"enable_detailed_analytics"`
 }
 
 func LinkDtoFromModel(link model.Link) LinkDto {
 	return LinkDto{
-		Id:           link.Id,
-		ShortLink:    link.ShortLink,
-		OriginalLink: link.OriginalLink,
-		Token:        link.Token,
-		Hits:         link.Hits,
-		MaxHits:      link.MaxHits,
-		ValidUntil:   link.ValidUntil,
-		CreatedAt:    link.CreatedAt,
-		TrackUntil:   link.TrackUntil,
+		Id:                      link.Id,
+		ShortLink:               link.ShortLink,
+		OriginalLink:            link.OriginalLink,
+		Token:                   link.Token,
+		Hits:                    link.Hits,
+		MaxHits:                 link.MaxHits,
+		ValidUntil:              link.ValidUntil,
+		CreatedAt:               link.CreatedAt,
+		EnableDetailedAnalytics: link.EnableDetailedAnalytics,
 	}
 }

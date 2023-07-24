@@ -8,7 +8,6 @@
 
 <div></div>
 
-
 {{ if .PageToken }}
 <div hx-get="/ajax/links?pageToken={{ .PageToken }}" hx-trigger="intersect" hx-swap="outerHTML">
   {{ template "loader" }}

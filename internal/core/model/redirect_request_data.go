@@ -1,6 +1,6 @@
 package model
 
-type RedirecsRequestData struct {
+type RedirectRequestData struct {
 	Ip        string
 	UserAgent string
 }
