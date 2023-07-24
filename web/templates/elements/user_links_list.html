@@ -1,0 +1,12 @@
+{{ range $i, $e := .Items }}
+
+{{template "link_list_item" $e}}
+
+{{end}}
+
+
+{{ if .PageToken }}
+<div hx-get="/ajax/links?pageToken={{ .PageToken }}" hx-trigger="intersect" hx-swap="outerHTML">
+  {{ template "loader" }}
+</div>
+{{ end }}

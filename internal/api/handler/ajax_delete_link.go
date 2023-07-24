@@ -36,7 +36,7 @@ func (h *AjaxDeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 }
 
 func (h *AjaxDeleteLinkHandler) Path() string {
-	return "/link/{linkId:[a-zA-Z0-9]{1,}}"
+	return "/ajax/link/{linkId:[a-zA-Z0-9]{1,}}"
 }
 
 func (h *AjaxDeleteLinkHandler) Method() string {

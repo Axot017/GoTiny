@@ -1,3 +1,4 @@
+{{ define "link_list_item" }}
 <div hx-boost="true" class="odd:bg-slate-950 even:bg-slate-900 w-screen flex-row flex
   px-6 py-4 items-center transition-all duration-200">
   <div onclick="navigator.clipboard.writeText('{{ .ShortLink }}'); showInfo('Copied!')">
@@ -17,3 +18,7 @@
     Details
   </a>
 </div>
+{{ end }}
+
+
+{{template "link_list_item" .}}

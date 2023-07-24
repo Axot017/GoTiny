@@ -58,7 +58,7 @@ func LinkDtoFromLink(link model.Link) LinkDto {
 	}
 }
 
-func (d LinkDto) ToLink() model.Link {
+func LinkDtoToLink(d LinkDto) model.Link {
 	var validUntil *time.Time
 	if d.TTL != nil {
 		t := time.Unix(int64(*d.TTL), 0)

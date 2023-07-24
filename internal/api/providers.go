@@ -67,6 +67,11 @@ func Providers() []interface{} {
 			fx.ResultTags(`group:"routes"`),
 			fx.As(new(RouteHandler)),
 		),
+		fx.Annotate(
+			handler.NewAjaxGetUserLinks,
+			fx.ResultTags(`group:"routes"`),
+			fx.As(new(RouteHandler)),
+		),
 		middleware.NewLinkTokenValidator,
 		middleware.NewIdCookieMiddleware,
 		util.NewStructuredLogger,

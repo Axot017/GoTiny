@@ -28,4 +28,10 @@ type LinksRepository interface {
 		linkId string,
 		page *string,
 	) (model.PagedResponse[model.LinkHitAnalitics], error)
+
+	GetUserLinks(
+		ctx context.Context,
+		userId string,
+		page *string,
+	) (model.PagedResponse[model.Link], error)
 }

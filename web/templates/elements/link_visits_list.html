@@ -8,8 +8,8 @@
 
 
 {{ if .Page.PageToken }}
-<div hx-get="/link/{{ .Link.Id}}/visits?token={{ .Link.Token }}&pageToken={{ .Page.PageToken }}" hx-trigger="revealed"
-  hx-swap="outerHTML" hx-target="this">
+<div hx-get="/ajax/link/{{ .Link.Id}}/visits?token={{ .Link.Token }}&pageToken={{ .Page.PageToken }}"
+  hx-trigger="revealed" hx-swap="outerHTML" hx-target="this">
   Loading...
 </div>
 {{ end }}
