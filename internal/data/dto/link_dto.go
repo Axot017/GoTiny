@@ -14,18 +14,18 @@ const (
 )
 
 type LinkDto struct {
-	PK           string // Constant
-	SK           string // Link id
-	ShortLink    string
-	OriginalLink string
-	Token        string
-	Hits         uint
-	MaxHits      *uint
-	TTL          *uint
-	GSI_1_PK     *string // User id
-	GSI_1_SK     *string // Created at
-	TrackUntil   *time.Time
-	CreatedAt    time.Time
+	PK                      string // Constant
+	SK                      string // Link id
+	ShortLink               string
+	OriginalLink            string
+	Token                   string
+	Hits                    uint
+	MaxHits                 *uint   `dynamodbav:",omitempty"`
+	TTL                     *uint   `dynamodbav:",omitempty"`
+	GSI_1_PK                *string `dynamodbav:",omitempty"` // User id
+	GSI_1_SK                *string `dynamodbav:",omitempty"` // Created at
+	EnableDetailedAnalytics bool
+	CreatedAt               time.Time
 }
 
 func LinkDtoFromLink(link model.Link) LinkDto {
@@ -43,18 +43,18 @@ func LinkDtoFromLink(link model.Link) LinkDto {
 		gsi1SK = &sk
 	}
 	return LinkDto{
-		PK:           LinkPK,
-		SK:           LinkSKPrefix + link.Id,
-		ShortLink:    link.ShortLink,
-		OriginalLink: link.OriginalLink,
-		Token:        link.Token,
-		Hits:         link.Hits,
-		MaxHits:      link.MaxHits,
-		TTL:          ttl,
-		GSI_1_PK:     gsi1PK,
-		GSI_1_SK:     gsi1SK,
-		TrackUntil:   link.TrackUntil,
-		CreatedAt:    link.CreatedAt,
+		PK:                      LinkPK,
+		SK:                      LinkSKPrefix + link.Id,
+		ShortLink:               link.ShortLink,
+		OriginalLink:            link.OriginalLink,
+		Token:                   link.Token,
+		Hits:                    link.Hits,
+		MaxHits:                 link.MaxHits,
+		TTL:                     ttl,
+		GSI_1_PK:                gsi1PK,
+		GSI_1_SK:                gsi1SK,
+		EnableDetailedAnalytics: link.EnableDetailedAnalytics,
+		CreatedAt:               link.CreatedAt,
 	}
 }
 
@@ -70,15 +70,15 @@ func LinkDtoToLink(d LinkDto) model.Link {
 		userId = &u
 	}
 	return model.Link{
-		Id:           d.SK[len(LinkSKPrefix):],
-		ShortLink:    d.ShortLink,
-		OriginalLink: d.OriginalLink,
-		Token:        d.Token,
-		Hits:         d.Hits,
-		MaxHits:      d.MaxHits,
-		ValidUntil:   validUntil,
-		UserId:       userId,
-		CreatedAt:    d.CreatedAt,
-		TrackUntil:   d.TrackUntil,
+		Id:                      d.SK[len(LinkSKPrefix):],
+		ShortLink:               d.ShortLink,
+		OriginalLink:            d.OriginalLink,
+		Token:                   d.Token,
+		Hits:                    d.Hits,
+		MaxHits:                 d.MaxHits,
+		ValidUntil:              validUntil,
+		UserId:                  userId,
+		CreatedAt:               d.CreatedAt,
+		EnableDetailedAnalytics: d.EnableDetailedAnalytics,
 	}
 }

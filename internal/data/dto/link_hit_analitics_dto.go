@@ -14,10 +14,10 @@ const (
 type LinkHitAnaliticsDto struct {
 	PK          string
 	SK          string
-	RequestData model.RedirecsRequestData
-	IpDetails   *model.IpDetails
+	RequestData model.RedirectRequestData
+	IpDetails   *model.IpDetails `dynamodbav:",omitempty"`
 	CreatedAt   time.Time
-	TTL         *uint
+	TTL         *uint `dynamodbav:",omitempty"`
 }
 
 func LinkHitAnaliticsDtoToDomain(links LinkHitAnaliticsDto) model.LinkHitAnalitics {

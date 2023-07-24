@@ -9,16 +9,16 @@ import (
 const tokenLength = 16
 
 type Link struct {
-	Id           string
-	ShortLink    string
-	OriginalLink string
-	Token        string
-	Hits         uint
-	MaxHits      *uint
-	UserId       *string
-	ValidUntil   *time.Time
-	TrackUntil   *time.Time
-	CreatedAt    time.Time
+	Id                      string
+	ShortLink               string
+	OriginalLink            string
+	Token                   string
+	Hits                    uint
+	MaxHits                 *uint
+	UserId                  *string
+	ValidUntil              *time.Time
+	EnableDetailedAnalytics bool
+	CreatedAt               time.Time
 }
 
 func NewFromIndex(index uint, linkToCreate LinkToCreate, baseUrl string) Link {
@@ -27,15 +27,15 @@ func NewFromIndex(index uint, linkToCreate LinkToCreate, baseUrl string) Link {
 	now := time.Now()
 
 	return Link{
-		Id:           id,
-		ShortLink:    shortLink,
-		Token:        util.RandString(tokenLength),
-		OriginalLink: linkToCreate.Url,
-		CreatedAt:    now,
-		UserId:       linkToCreate.UserId,
-		MaxHits:      linkToCreate.MaxHits,
-		TrackUntil:   linkToCreate.TrackUntil,
-		ValidUntil:   linkToCreate.ValidUntil,
+		Id:                      id,
+		ShortLink:               shortLink,
+		Token:                   util.RandString(tokenLength),
+		OriginalLink:            linkToCreate.Url,
+		CreatedAt:               now,
+		UserId:                  linkToCreate.UserId,
+		MaxHits:                 linkToCreate.MaxHits,
+		EnableDetailedAnalytics: linkToCreate.EnableDetailedAnalytics,
+		ValidUntil:              linkToCreate.ValidUntil,
 	}
 }
 

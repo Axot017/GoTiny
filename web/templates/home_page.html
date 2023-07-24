@@ -5,16 +5,7 @@
   <title>GoTiny</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/public/toastify.min.css" />
-  <link rel="stylesheet" href="/public/styles.css" />
-  <script src="/public/htmx.min.js"></script>
-  <script src="/public/toastify.min.js"></script>
-  <script src="/public/toastify.js"></script>
-  <script src="/public/sweetalert2.min.js"></script>
-  <script src="/public/loading-states.js"></script>
-  <script src="/public/format-dates.js"></script>
-  <script defer src="/public/base.js"></script>
+  {{ template "common_head" }}
 </head>
 
 <body class="w-screen">
@@ -37,17 +28,15 @@
         </div>
       </form>
     </div>
-    <div class='flex-1'>
+    <div class="flex-1">
 
       <div class="aspect-16/6">
       </div>
       <div id="target" class="bg-slate-900 flex flex-col-reverse"></div>
       <div id="target" class="bg-slate-900 flex flex-col items-center">
-
         <div hx-get="/ajax/links" hx-trigger="revealed" hx-swap="outerHTML" hx-target="this">
           {{ template "loader" }}
         </div>
-
       </div>
     </div>
   </div>
