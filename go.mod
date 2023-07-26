@@ -5,8 +5,8 @@ go 1.20
 require (
 	github.com/aws/aws-sdk-go-v2 v1.19.0
 	github.com/aws/aws-sdk-go-v2/config v1.18.28
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.31
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.20.1
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.32
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.20.2
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-openapi/runtime v0.26.0
 	github.com/go-playground/form/v4 v4.2.1
