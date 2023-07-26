@@ -60,18 +60,6 @@ resource "aws_apprunner_auto_scaling_configuration_version" "app" {
   }
 }
 
-resource "aws_apprunner_custom_domain_association" "app" {
-  domain_name          = var.app_base_url
-  service_arn          = aws_apprunner_service.app.arn
-  enable_www_subdomain = false
-}
-
-output "app_certificate_validation_records" {
-  value     = aws_apprunner_custom_domain_association.app.certificate_validation_records
-  sensitive = true
-}
-
-output "app_dns_target" {
-  value     = aws_apprunner_custom_domain_association.app.dns_target
-  sensitive = true
+output "app_url" {
+  value = aws_apprunner_service.app.service_url
 }
