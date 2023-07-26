@@ -90,12 +90,13 @@ func newMux(
 	mux.Method(http.MethodGet, "/api/docs", redoc)
 	mux.Method(http.MethodGet, "/api/swagger-ui", swaggerUI)
 	mux.Method(http.MethodGet, "/api/swagger.yaml", http.FileServer(http.Dir("./")))
-	mux.With(addCacheHeader).
+	mux.With(app_middleware.GetCacheMiddleware(86400)).
 		Method(http.MethodGet, "/public/*", http.FileServer(http.Dir("./web/")))
 
 	for _, h := range handlers {
 		mux.Group(func(r chi.Router) {
 			middlewares := app_middleware.GetMiddlewaresToAttach(h)
+			r.Use(app_middleware.NoCacheMiddleware)
 			for _, m := range middlewares {
 				r.Use(m)
 			}
@@ -121,11 +122,4 @@ func loadTemplates() (*template.Template, error) {
 	t = t.Funcs(util.TemplatesFunctions)
 
 	return t, nil
-}
-
-func addCacheHeader(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Cache-Control", "max-age=86400")
-		next.ServeHTTP(w, r)
-	})
 }

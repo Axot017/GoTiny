@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
+	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 )
 
@@ -30,4 +31,10 @@ func (h *AjaxHomePageHandler) Path() string {
 
 func (h *AjaxHomePageHandler) Method() string {
 	return http.MethodGet
+}
+
+func (h *AjaxHomePageHandler) Middlewares() []func(http.Handler) http.Handler {
+	return []func(http.Handler) http.Handler{
+		middleware.GetCacheMiddleware(86400),
+	}
 }

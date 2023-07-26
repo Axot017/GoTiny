@@ -40,5 +40,6 @@ func (h *AjaxLinkDetailsPageHandler) Method() string {
 func (h *AjaxLinkDetailsPageHandler) Middlewares() []func(http.Handler) http.Handler {
 	return []func(http.Handler) http.Handler{
 		h.linkTokenValidator.Handle,
+		middleware.GetCacheMiddleware(86400),
 	}
 }
