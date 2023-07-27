@@ -4,7 +4,7 @@ name: 'Deploy prod'
 on:
   push:
     tags:
-      - **.**.**
+      - v**
 
 jobs:
   upload-prod-mage:
