@@ -7,8 +7,14 @@ test:
 dev_infra:
 	cd deployments/infrastructure/dev && terraform init && terraform apply
 
+prod_infra:
+	cd deployments/infrastructure/prod && terraform init && terraform apply
+
 dev_outputs:
 	cd deployments/infrastructure/dev && terraform output all_outputs
+
+prod_outputs:
+	cd deployments/infrastructure/prod && terraform output all_outputs
 
 spec:
 	swagger generate spec -o ./api/swagger.yaml --scan-models
