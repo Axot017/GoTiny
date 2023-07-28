@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/usecase"
@@ -38,16 +40,6 @@ func (h *AjaxGetUserLinks) ServeHTTP(writer http.ResponseWriter, request *http.R
 	util.WriteTemplate(request, writer, h.template, "user_links_list.html", links)
 }
 
-func (h *AjaxGetUserLinks) Path() string {
-	return "/ajax/links"
-}
-
-func (h *AjaxGetUserLinks) Method() string {
-	return http.MethodGet
-}
-
-func (h *AjaxGetUserLinks) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.idCookieMiddleware.Handle,
-	}
+func (h *AjaxGetUserLinks) Register(router chi.Router) {
+	router.With(h.idCookieMiddleware.Handle).Get("/ajax/links", h.ServeHTTP)
 }

@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/form/v4"
 	"github.com/go-playground/validator/v10"
 
@@ -65,16 +66,6 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 	util.WriteTemplate(request, writer, h.template, "link_list_item.html", link)
 }
 
-func (h *AjaxCreateLinkHandler) Path() string {
-	return "/ajax/link"
-}
-
-func (h *AjaxCreateLinkHandler) Method() string {
-	return http.MethodPost
-}
-
-func (h *AjaxCreateLinkHandler) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.idCookieMiddleware.Handle,
-	}
+func (h *AjaxCreateLinkHandler) Register(router chi.Router) {
+	router.With(h.idCookieMiddleware.Handle).Post("/ajax/link", h.ServeHTTP)
 }

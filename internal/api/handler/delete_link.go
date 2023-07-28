@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
@@ -56,16 +58,6 @@ func (h *DeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	util.WriteResponseJson(writer, nil, http.StatusNoContent)
 }
 
-func (h *DeleteLinkHandler) Path() string {
-	return "/api/v1/link/{linkId:[a-zA-Z0-9]{1,}}"
-}
-
-func (h *DeleteLinkHandler) Method() string {
-	return http.MethodDelete
-}
-
-func (h *DeleteLinkHandler) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.linkTokenValidator.Handle,
-	}
+func (h *DeleteLinkHandler) Register(router chi.Router) {
+	router.With(h.linkTokenValidator.Handle).Delete("/api/v1/link/{linkId}", h.ServeHTTP)
 }

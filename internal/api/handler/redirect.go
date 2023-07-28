@@ -55,10 +55,6 @@ func (h *RedirectHandler) ServeHTTP(writer http.ResponseWriter, request *http.Re
 	http.Redirect(writer, request, *url, http.StatusMovedPermanently)
 }
 
-func (h *RedirectHandler) Path() string {
-	return "/{linkId:[a-zA-Z0-9]{1,}}"
-}
-
-func (h *RedirectHandler) Method() string {
-	return http.MethodGet
+func (h *RedirectHandler) Register(router chi.Router) {
+	router.Get("/{linkId}", h.ServeHTTP)
 }

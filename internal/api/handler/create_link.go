@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
 
 	"gotiny/internal/api/dto"
@@ -69,10 +70,6 @@ func (h *CreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	util.WriteResponseJson(writer, dto, http.StatusCreated)
 }
 
-func (h *CreateLinkHandler) Path() string {
-	return "/api/v1/link"
-}
-
-func (h *CreateLinkHandler) Method() string {
-	return http.MethodPost
+func (h *CreateLinkHandler) Register(router chi.Router) {
+	router.Post("/api/v1/link", h.ServeHTTP)
 }

@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
@@ -48,16 +50,6 @@ func (h *AjaxGetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *ht
 	})
 }
 
-func (h *AjaxGetVisitsHandler) Path() string {
-	return "/ajax/link/{linkId}/visits"
-}
-
-func (h *AjaxGetVisitsHandler) Method() string {
-	return http.MethodGet
-}
-
-func (h *AjaxGetVisitsHandler) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.linkTokenValidator.Handle,
-	}
+func (h *AjaxGetVisitsHandler) Register(router chi.Router) {
+	router.With(h.linkTokenValidator.Handle).Get("/ajax/link/{linkId}/visits", h.ServeHTTP)
 }

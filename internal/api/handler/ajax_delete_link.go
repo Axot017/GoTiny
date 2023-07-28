@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
@@ -35,16 +37,6 @@ func (h *AjaxDeleteLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 	writer.Header().Set("HX-Redirect", "/")
 }
 
-func (h *AjaxDeleteLinkHandler) Path() string {
-	return "/ajax/link/{linkId:[a-zA-Z0-9]{1,}}"
-}
-
-func (h *AjaxDeleteLinkHandler) Method() string {
-	return http.MethodDelete
-}
-
-func (h *AjaxDeleteLinkHandler) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.linkTokenValidator.Handle,
-	}
+func (h *AjaxDeleteLinkHandler) Register(router chi.Router) {
+	router.With(h.linkTokenValidator.Handle).Delete("/ajax/link/{linkId}", h.ServeHTTP)
 }

@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/dto"
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
@@ -36,35 +38,25 @@ type getLinkDetailsResponse struct {
 //	401: errorResponse
 //	404: errorResponse
 //	500: errorResponse
-type GetLinkDetails struct {
+type GetLinkDetailsHandler struct {
 	linkTokenValidator *middleware.LinkTokenValidator
 }
 
 func NewGetLinkDetailsHandler(
 	linkTokenValidator *middleware.LinkTokenValidator,
-) *GetLinkDetails {
-	return &GetLinkDetails{
+) *GetLinkDetailsHandler {
+	return &GetLinkDetailsHandler{
 		linkTokenValidator: linkTokenValidator,
 	}
 }
 
-func (h *GetLinkDetails) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (h *GetLinkDetailsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	link := request.Context().Value("link").(*model.Link)
 	dto := dto.LinkDtoFromModel(*link)
 
 	util.WriteResponseJson(writer, dto)
 }
 
-func (h *GetLinkDetails) Path() string {
-	return "/api/v1/link/{linkId:[a-zA-Z0-9]{1,}}"
-}
-
-func (h *GetLinkDetails) Method() string {
-	return http.MethodGet
-}
-
-func (h *GetLinkDetails) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.linkTokenValidator.Handle,
-	}
+func (h *GetLinkDetailsHandler) Register(router chi.Router) {
+	router.With(h.linkTokenValidator.Handle).Get("/api/v1/link/{linkId}", h.ServeHTTP)
 }
