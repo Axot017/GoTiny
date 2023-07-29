@@ -94,14 +94,7 @@ func newMux(
 		Method(http.MethodGet, "/public/*", http.FileServer(http.Dir("./web/")))
 
 	for _, h := range handlers {
-		mux.Group(func(r chi.Router) {
-			middlewares := app_middleware.GetMiddlewaresToAttach(h)
-			r.Use(app_middleware.NoCacheMiddleware)
-			for _, m := range middlewares {
-				r.Use(m)
-			}
-			r.Method(h.Method(), h.Path(), h)
-		})
+		h.Register(mux.With(app_middleware.NoCacheMiddleware))
 	}
 
 	return mux

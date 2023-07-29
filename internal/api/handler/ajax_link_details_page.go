@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
 	"gotiny/internal/core/model"
@@ -29,17 +31,8 @@ func (h *AjaxLinkDetailsPageHandler) ServeHTTP(writer http.ResponseWriter, reque
 	util.WriteTemplate(request, writer, h.template, "link_details_page.html", link)
 }
 
-func (h *AjaxLinkDetailsPageHandler) Path() string {
-	return "/link/{linkId}"
-}
-
-func (h *AjaxLinkDetailsPageHandler) Method() string {
-	return http.MethodGet
-}
-
-func (h *AjaxLinkDetailsPageHandler) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.linkTokenValidator.Handle,
-		middleware.GetCacheMiddleware(86400),
-	}
+func (h *AjaxLinkDetailsPageHandler) Register(router chi.Router) {
+	router.
+		With(h.linkTokenValidator.Handle, middleware.GetCacheMiddleware(86400)).
+		Get("/link/{linkId}", h.ServeHTTP)
 }

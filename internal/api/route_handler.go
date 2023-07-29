@@ -1,11 +1,9 @@
 package api
 
-import "net/http"
+import (
+	"github.com/go-chi/chi/v5"
+)
 
 type RouteHandler interface {
-	http.Handler
-
-	Path() string
-
-	Method() string
+	Register(router chi.Router)
 }

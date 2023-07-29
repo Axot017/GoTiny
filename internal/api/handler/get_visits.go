@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
+
 	"gotiny/internal/api/dto"
 	"gotiny/internal/api/middleware"
 	"gotiny/internal/api/util"
@@ -72,16 +74,6 @@ func (h *GetVisitsHandler) ServeHTTP(writer http.ResponseWriter, request *http.R
 	util.WriteResponseJson(writer, dto)
 }
 
-func (h *GetVisitsHandler) Path() string {
-	return "/api/v1/link/{linkId}/visits"
-}
-
-func (h *GetVisitsHandler) Method() string {
-	return http.MethodGet
-}
-
-func (h *GetVisitsHandler) Middlewares() []func(http.Handler) http.Handler {
-	return []func(http.Handler) http.Handler{
-		h.linkTokenValidator.Handle,
-	}
+func (h *GetVisitsHandler) Register(router chi.Router) {
+	router.With(h.linkTokenValidator.Handle).Get("/api/v1/link/{linkId}/visits", h.ServeHTTP)
 }

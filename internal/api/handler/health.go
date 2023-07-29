@@ -1,6 +1,10 @@
 package handler
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+)
 
 // swagger:route GET /api/health health
 //
@@ -21,10 +25,6 @@ func (h *HealthHandler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	writer.WriteHeader(http.StatusOK)
 }
 
-func (h *HealthHandler) Path() string {
-	return "/api/health"
-}
-
-func (h *HealthHandler) Method() string {
-	return http.MethodGet
+func (h *HealthHandler) Register(router chi.Router) {
+	router.Get("/api/health", h.ServeHTTP)
 }
