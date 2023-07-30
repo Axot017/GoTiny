@@ -188,14 +188,14 @@ func (r *DynamodbLinksRepository) SaveHitAnalitics(
 	linkId string,
 	requestData model.LinkHitAnalitics,
 ) error {
+	ttl := uint(time.Now().Add(time.Hour * 24 * 30).Unix()) // Valid for 30 days
 	dto := dto.LinkHitAnaliticsDto{
 		PK:          dto.LinkVisitPKPrefix + linkId,
 		SK:          dto.LinkVisitSKPrefix + ksuid.New().String(),
 		IpDetails:   requestData.IpDetails,
 		RequestData: requestData.RequestData,
 		CreatedAt:   time.Now(),
-		// TODO: Set ttl
-		// TTL: ,
+		TTL:         &ttl,
 	}
 	avs, err := attributevalue.MarshalMap(dto)
 	if err != nil {

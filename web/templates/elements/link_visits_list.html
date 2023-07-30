@@ -29,7 +29,7 @@
   <td class="px-6 py-4" id="time-{{ $e.Id }}">
   </td>
   <script>
-    document.getElementById('time-{{ $e.Id }}').innerHTML = new Date('{{ $e.CreatedAt }}').toLocaleString();
+    document.getElementById('time-{{ $e.Id }}').innerHTML = new Date('{{ $e.CreatedAt.Format "2006-01-02T15:04:05-0700" }}').toLocaleString();
   </script>
 </tr>
 {{ end }}

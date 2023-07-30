@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en" class="dark">
 
 <head>
   <title>GoTiny - Link Details</title>
@@ -47,7 +47,7 @@
             {{ .ValidUntil }}
           </td>
           <script>
-            document.getElementById('valid-until').innerHTML = new Date('{{ .ValidUntil }}').toLocaleString();
+            document.getElementById('valid-until').innerHTML = new Date('{{ .ValidUntil.Format "2006-01-02T15:04:05-0700" }}').toLocaleString();
           </script>
         </tr>
         {{ end }}
@@ -67,7 +67,7 @@
             {{ .CreatedAt }}
           </td>
           <script>
-            document.getElementById('created-at').innerHTML = new Date('{{ .CreatedAt }}').toLocaleString();
+            document.getElementById('created-at').innerHTML = new Date('{{ .CreatedAt.Format "2006-01-02T15:04:05-0700" }}').toLocaleString();
           </script>
         </tr>
         <tr class="even:bg-slate-900 odd:bg-slate-950">

@@ -50,11 +50,10 @@ func (h *AjaxCreateLinkHandler) ServeHTTP(writer http.ResponseWriter, request *h
 		return
 	}
 	config := model.LinkToCreate{
-		Url:        create_link_dto.Link,
-		MaxHits:    create_link_dto.MaxHits,
-		ValidUntil: create_link_dto.ValidUntil,
-		// EnableDetailedAnalytics: create_link_dto.EnableDetailedAnalytics,
-		EnableDetailedAnalytics: true,
+		Url:                     create_link_dto.Link,
+		MaxHits:                 create_link_dto.MaxHits,
+		ValidUntil:              create_link_dto.ValidUntil,
+		EnableDetailedAnalytics: create_link_dto.EnableDetailedAnalytics,
 		UserId:                  request.Context().Value("user_id").(*string),
 	}
 	link, err := h.createShortLink.Call(request.Context(), config)
