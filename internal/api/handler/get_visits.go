@@ -37,7 +37,8 @@ type GetVisitsHandler struct {
 //
 // # Get link visits
 //
-// # Get paginated list of visits for a link
+// Get paginated list of visits for a link containing IP, user agent, and approximate location.
+// If detailed diagnostics is disabled it will return an empty list.
 //
 // Responses:
 //

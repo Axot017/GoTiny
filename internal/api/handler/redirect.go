@@ -20,7 +20,7 @@ type redirectParams struct {
 //
 // # Redirect
 //
-// This will redirect to the original URL.
+// This will redirect to the original URL. It will also save visit information if detailed diagnostics is enabled.
 //
 // Responses:
 //

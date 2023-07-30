@@ -4,6 +4,11 @@ consumes:
 definitions:
     CreateLinkDto:
         properties:
+            enable_detailed_analytics:
+                description: Enable detailed analytics
+                example: true
+                type: boolean
+                x-go-name: EnableDetailedAnalytics
             link:
                 description: Link to be shortened
                 example: https://google.com
@@ -16,14 +21,6 @@ definitions:
                 minimum: 1
                 type: integer
                 x-go-name: MaxHits
-            track_until:
-                description: |-
-                    Data about link visits will be stored until this date.
-                    If not provided, the data will be not stored
-                example: "2021-01-01T00:00:00Z"
-                format: date-time
-                type: string
-                x-go-name: TrackUntil
             valid_until:
                 description: Valid until in iso8601 format. If not provided, the link will be valid forever
                 example: "2021-01-01T00:00:00Z"
@@ -68,6 +65,11 @@ definitions:
                 format: date-time
                 type: string
                 x-go-name: CreatedAt
+            enable_detailed_analytics:
+                description: Enable detailed analytics
+                example: true
+                type: boolean
+                x-go-name: EnableDetailedAnalytics
             hits:
                 description: Link visits
                 example: 42
@@ -116,6 +118,22 @@ definitions:
         x-go-package: gotiny/internal/api/dto
     VisitDto:
         properties:
+            city:
+                description: The city name of the visitor
+                type: string
+                x-go-name: City
+            country:
+                description: The country name of the visitor
+                type: string
+                x-go-name: Country
+            country_code:
+                description: The country code of the visitor
+                type: string
+                x-go-name: CountryCode
+            country_flag_svg_image:
+                description: The country flag svg image of the visitor
+                type: string
+                x-go-name: CountryFlagSvgImage
             created_at:
                 description: The time when the visit was created
                 format: date-time
@@ -129,10 +147,32 @@ definitions:
                 description: Ip address of the visitor
                 type: string
                 x-go-name: IpAddress
+            ip_type:
+                description: The type of IP address
+                type: string
+                x-go-name: Type
+            latitude:
+                description: The latitude of the visitor
+                format: double
+                type: number
+                x-go-name: Latitude
+            longitude:
+                description: The longitude of the visitor
+                format: double
+                type: number
+                x-go-name: Longitude
+            region:
+                description: The region name of the visitor
+                type: string
+                x-go-name: Region
             user_agent:
                 description: User agent of the visitor
                 type: string
                 x-go-name: UserAgent
+            zip:
+                description: The zip code of the visitor
+                type: string
+                x-go-name: Zip
         required:
             - id
             - ip_addr
@@ -145,13 +185,16 @@ info:
         email: mateuszledwon@duck.com
         name: Mateusz Ledwoń
         url: https://github.com/Axot017
-    description: 'TODO: add description'
+    description: |-
+        GoTiny is a web app that lets you create short URLs from long ones.
+        You can set a TTL or a visit limit for your links and track their clicks.
+        GoTiny is open source and free to use.
     title: GoTiny API
     version: 0.0.1
 paths:
     /{linkId}:
         get:
-            description: This will redirect to the original URL.
+            description: This will redirect to the original URL. It will also save visit information if detailed diagnostics is enabled.
             operationId: redirect
             parameters:
                 - in: path
@@ -177,7 +220,7 @@ paths:
             summary: Health check
     /api/v1/link:
         post:
-            description: This will create a short link.
+            description: This will create a short link with given settings.
             operationId: createLink
             parameters:
                 - in: body
@@ -235,10 +278,6 @@ paths:
                   name: token
                   type: string
                   x-go-name: Token
-                - in: query
-                  name: page
-                  type: string
-                  x-go-name: Page
             responses:
                 "200":
                     $ref: '#/responses/getLinkDetailsResponse'
@@ -255,11 +294,27 @@ paths:
                 - link
     /api/v1/link/{linkId}/visits:
         get:
-            description: '# Get paginated list of visits for a link'
+            description: |-
+                Get paginated list of visits for a link containing IP, user agent, and approximate location.
+                If detailed diagnostics is disabled it will return an empty list.
             operationId: getVisits
+            parameters:
+                - in: path
+                  name: linkId
+                  required: true
+                  type: string
+                  x-go-name: LinkId
+                - in: query
+                  name: token
+                  type: string
+                  x-go-name: Token
+                - in: query
+                  name: page
+                  type: string
+                  x-go-name: Page
             responses:
                 "200":
-                    $ref: '#/responses/getLinkDetailsResponse'
+                    $ref: '#/responses/getVisitsResponse'
                 "400":
                     $ref: '#/responses/errorResponse'
                 "401":
@@ -288,6 +343,9 @@ responses:
         description: ""
         schema:
             $ref: '#/definitions/LinkDto'
+    getVisitsResponse:
+        description: ""
+        schema:
             items:
                 $ref: '#/definitions/VisitDto'
             type: array
