@@ -1,6 +1,8 @@
 // Package api GoTiny API
 //
-// TODO: add description
+// GoTiny is a web app that lets you create short URLs from long ones.
+// You can set a TTL or a visit limit for your links and track their clicks.
+// GoTiny is open source and free to use.
 //
 //	BasePath: /
 //	Version: 0.0.1

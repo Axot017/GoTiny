@@ -28,7 +28,7 @@ type createLinkResponse struct {
 //
 // # Create short link
 //
-// This will create a short link.
+// This will create a short link with given settings.
 //
 // Responses:
 //
