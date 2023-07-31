@@ -49,27 +49,33 @@ or with make:
 
 ## Technologies
 
+This section describes the main technologies and tools used to develop and deploy the GoTiny app. It covers both the backend and the frontend aspects of the project.
+
 ### Backend
 
 The backend is designed in Go, a fast and reliable programming language ideal for web development. Because the intention was to keep the code basic and maintainable, the backend does not use many external packages. The backend is primarily dependent on standard library features and functions. The following libraries are used by the backend:
-- chi router: A lightweight and idiomatic HTTP router that follows the standard library patterns and interfaces.
-- fx: A dependency injection framework that simplifies the wiring and configuration of components and services.
-- slog: A structured and leveled logging library that supports multiple output formats and contexts.
-- aws sdk: A comprehensive and easy-to-use library that allows interacting with various AWS services.
-- testify: A testing toolkit that provides assertions, mocks, suites and helpers for writing clear and concise tests.
-- goswagger: A tool that generates API documentation and swagger-ui from annotations in the code.
+- chi router: A lightweight and idiomatic HTTP router that follows the standard library patterns and interfaces. [[Learn more]](https://htmx.org/)
+- fx: A dependency injection framework that simplifies the wiring and configuration of components and services. [[Learn more]](https://github.com/uber-go/fx)
+- slog: A structured and leveled logging library that supports multiple output formats and contexts. [[Learn more]](https://pkg.go.dev/golang.org/x/exp/slog)
+- aws sdk: A comprehensive and easy-to-use library that allows interacting with various AWS services. [[Learn more]](https://github.com/aws/aws-sdk-go-v2)
+- testify: A testing toolkit that provides assertions, mocks, suites and helpers for writing clear and concise tests. [[Learn more]](https://github.com/stretchr/testify)
+- goswagger: A tool that generates API documentation and swagger-ui from annotations in the code. [[Learn more]](https://goswagger.io)
 
 ### Frontend
 
-TODO
+The frontend is very basic HTML and CSS, using the Tailwind CSS framework. Tailwind CSS is a utility-first framework that provides low-level and customizable classes for styling elements. [[Learn more]](https://github.com/go-chi/chi).
+
+The pages are rendered with Go templates, a powerful and simple templating engine that allows injecting data into HTML files. [[Learn more]](https://pkg.go.dev/html/template).
+
+To add reactivity to the pages, the htmx library is used. htmx is a lightweight and modern library that enables high-performance AJAX without writing any JavaScript code. [[Learn more]](https://htmx.org/).
 
 ### Infrastructure
 
 The project is hosted on Amazon Web Services (AWS), a secure and scalable cloud platform with a wide range of services and capabilities. Terraform, an open-source tool for writing infrastructure as code, is also used in the project. Terraform enables the declarative and consistent creation and management of infrastructure resources. The following AWS services are used in the project:
-- App Runner: A fully managed service that makes it easy to deploy and run containerized web applications at scale.
-- DynamoDB: A fast and flexible NoSQL database that provides consistent and low-latency performance.
-- Route 53: A reliable and cost-effective DNS service that routes traffic to the best endpoint for the application.
-- CloudFront: A global content delivery network that improves the speed and security of the web content delivery. (TODO)
+- App Runner: A fully managed service that makes it easy to deploy and run containerized web applications at scale. [[Learn more]](https://aws.amazon.com/apprunner/)
+- DynamoDB: A fast and flexible NoSQL database that provides consistent and low-latency performance. [[Learn more]](https://aws.amazon.com/dynamodb/)
+- Route 53: A reliable and cost-effective DNS service that routes traffic to the best endpoint for the application. [[Learn more]](https://aws.amazon.com/route53/)
+- CloudFront: A global content delivery network that improves the speed and security of the web content delivery. [[Learn more]](https://aws.amazon.com/cloudfront/)
 
 ## Architecture
 
