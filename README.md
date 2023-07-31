@@ -4,7 +4,7 @@ GoTiny is a web app that lets you create short URLs from long ones.
 You can set a TTL or a visit limit for your links and track their clicks. 
 GoTiny is open source and free to use. Please star or contribute to the project on GitHub if you like it.
 
-You can use the app at [https://goti.one](https://goti.one) (it's not responsive and not too pretty. I'm not the best with css and even at designing)
+You can use the app at [https://goti.one](https://goti.one) (it's not responsive and not too pretty. I'm not the best with css and even worse at designing)
 or check out the [API docs](https://goti.one/api/docs) and [SwaggerUI](https://goti.one/api/swagger-ui)
 
 
